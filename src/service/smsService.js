@@ -11,9 +11,9 @@ const { SECRET_SMS, SECRET_SMS_KEY } = process.env;
 
 const handleSendMessage = async (subscriber, message) => {
   console.log("Sending to: ", subscriber);
-  const subscriberDb = await VerifiedNumber.findById(
-    JSON.stringify(subscriber)
-  ).catch((err) => console.log("number does not exist"));
+  const subscriberDb = await VerifiedNumber.findById(subscriber).catch((err) =>
+    console.log("number does not exist")
+  );
 
   if (!subscriberDb) return "Something went wrong...";
 
