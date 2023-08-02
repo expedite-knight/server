@@ -10,7 +10,6 @@ const { RES_TYPES } = require("../utils/helper");
 const { SECRET_SMS, SECRET_SMS_KEY } = process.env;
 
 const handleSendMessage = async (subscriber, message) => {
-  console.log("Sending to: ", subscriber);
   const subscriberDb = await VerifiedNumber.findById(subscriber).catch((err) =>
     console.log("number does not exist")
   );
@@ -118,9 +117,15 @@ const handleVerifyNumber = async (number) => {
   }).catch((err) => console.log("number not yet verified"));
 
   if (optionalNumber) {
-    return "This number is already verified and is able to receive updates from us";
+    if (optionalNumber.verified) {
+      return "This number is already verified and is able to receive updates from us";
+    }
+    optionalNumber.verified = true;
+    await optionalNumber.save();
+
+    return "Your number has been verified and can now receive SMS updates from us. To unverify, reply UNVERIFY";
   } else {
-    await VerifiedNumber.create({ number: number });
+    await VerifiedNumber.create({ number: number, verified: true });
     return "Your number has been verified and can now receive SMS updates from us. To unverify, reply UNVERIFY";
   }
 };
