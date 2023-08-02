@@ -10,10 +10,14 @@ const { RES_TYPES } = require("../utils/helper");
 const { SECRET_SMS, SECRET_SMS_KEY } = process.env;
 
 const handleSendMessage = async (subscriber, message) => {
-  const subscriberDb = await VerifiedNumber.findById(subscriber).catch((err) =>
-    console.log("number does not exist")
-  );
-  if (subscriberDb?.verified) {
+  console.log("Sending to: ", subscriber);
+  const subscriberDb = await VerifiedNumber.findById(
+    JSON.stringify(subscriber)
+  ).catch((err) => console.log("number does not exist"));
+
+  if (!subscriberDb) return "Something went wrong...";
+
+  if (subscriberDb.verified) {
     console.log(`sending: "${message}" to: ${subscriberDb.number}`);
     await client.messages
       .create({
