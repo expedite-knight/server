@@ -161,10 +161,10 @@ const unsubFromRoute = async (route, number) => {
 const formatSubscriber = (subscriber) => {
   let formatted = subscriber;
 
-  if (subscriber.length === 10) {
-    formatted = "+1".concat(subscriber);
-  } else if (subscriber.length === 11 && subscriber.indexOf(0)) {
-    formatted = "+".concat(subscriber);
+  if (subscriber.number.length === 10) {
+    formatted = "+1".concat(subscriber.number);
+  } else if (subscriber.number.length === 11 && subscriber.number.indexOf(0)) {
+    formatted = "+".concat(subscriber.number);
   }
   return formatted;
 };
