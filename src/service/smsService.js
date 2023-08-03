@@ -160,6 +160,7 @@ const unsubFromRoute = async (route, number) => {
 
 const formatSubscriber = (subscriber) => {
   let formatted = subscriber.number;
+  console.log("formatting: ", subscriber);
 
   if (subscriber.number.length === 10) {
     formatted = "+1".concat(subscriber.number);

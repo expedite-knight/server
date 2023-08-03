@@ -9,6 +9,7 @@ const { RES_TYPES } = require("../utils/helper");
 const calculateETA = async (route, currentLocation, offset) => {
   const { MATRIX_API_KEY } = process.env;
   console.log("Curr locale: ", currentLocation);
+  console.log("Des: ", route.destination);
 
   try {
     const eta = await axios(
