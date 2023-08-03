@@ -50,7 +50,7 @@ const createRoute = async (
 
     const formattedSubscribers = subscribers.map((subscriber) => {
       subscriber = JSON.parse(subscriber);
-      subscriber.number = formatSubscriber(subscriber);
+      subscriber.number = formatSubscriber(subscriber.number);
       return subscriber;
     });
 
