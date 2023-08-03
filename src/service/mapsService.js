@@ -10,6 +10,8 @@ const calculateETA = async (route, currentLocation, offset) => {
   const { MATRIX_API_KEY } = process.env;
 
   const formattedDestination = route.destination.replaceAll(" ", "%20");
+  console.log("Formatted dest: ", formattedDestination);
+  console.log("Curr locale: ", currentLocation);
 
   try {
     const eta = await axios(
