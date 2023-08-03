@@ -50,7 +50,7 @@ const createRoute = async (
 
     const formattedSubscribers = subscribers.map((subscriber) => {
       subscriber = JSON.parse(subscriber);
-      subscriber.number = formatSubscriber(subscriber.number);
+      subscriber.number = formatSubscriber(subscriber);
       return subscriber;
     });
 
@@ -120,6 +120,7 @@ const activateRoute = async (
   if (alreadyActive.length <= 0 || override) {
     const route = await Route.findById(routeId)
       .populate("creator")
+      .populate("subscribers")
       .catch((res) => console.log("No already active routes"));
 
     const formattedLocation = JSON.stringify(currentLocation.lat)
