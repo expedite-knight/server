@@ -21,7 +21,7 @@ const handleSendMessage = async (subscriber, message) => {
     await client.messages
       .create({
         body: message,
-        to: formatSubscriber(subscriber),
+        to: formatSubscriber(subscriberDb),
         from: "+17046868257",
       })
       .then((message) => {
@@ -158,9 +158,9 @@ const unsubFromRoute = async (route, number) => {
   }
 };
 
+//this one takes the object
 const formatSubscriber = (subscriber) => {
   let formatted = subscriber.number;
-  console.log("formatting: ", subscriber);
 
   if (subscriber.number.length === 10) {
     formatted = "+1".concat(subscriber.number);

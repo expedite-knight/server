@@ -8,13 +8,12 @@ const { RES_TYPES } = require("../utils/helper");
 
 const calculateETA = async (route, currentLocation, offset) => {
   const { MATRIX_API_KEY } = process.env;
-  console.log("Curr locale: ", currentLocation);
-  console.log("Des: ", route.destination);
 
   try {
     const eta = await axios(
       `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${currentLocation}&destinations=${route.destination}&key=${MATRIX_API_KEY}`
     ).then(async (res) => {
+      console.log("Matrix Res: ", res.data.rows[0].elements);
       const fullDistance = res.data.rows[0].elements[0].distance.text;
       const indexOfDistance = fullDistance.indexOf(" ");
       const distanceString = fullDistance.substr(0, indexOfDistance);

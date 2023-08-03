@@ -164,13 +164,13 @@ router.post("/update", validateRouteUpdate, async (req, res) => {
         }).catch((err) => console.log("Could not find subscriber"));
 
         if (alreadyExists) {
-          alreadyExists.number = formatSubscriber(subscriber.number);
+          alreadyExists.number = formatSubscriber(subscriber);
           await alreadyExists.save();
 
           return alreadyExists;
         } else {
           return await VerifiedNumber.create({
-            number: formatSubscriber(subscriber.number),
+            number: formatSubscriber(subscriber),
           });
         }
       })

@@ -237,6 +237,7 @@ const deactivateCurrentActiveRoute = async (userId) => {
   return RES_TYPES.SUCCESS;
 };
 
+//this one takes the string
 const formatSubscriber = (subscriber) => {
   let formatted = subscriber;
 
