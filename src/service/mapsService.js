@@ -10,15 +10,11 @@ const calculateETA = async (route, currentLocation, offset) => {
   const { MATRIX_API_KEY } = process.env;
 
   const formattedDestination = route.destination.replaceAll(" ", "%20");
-  console.log("Formatted dest: ", formattedDestination);
-  console.log("Curr locale: ", currentLocation);
 
   try {
     const eta = await axios(
       `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${currentLocation}&destinations=${formattedDestination}&key=${MATRIX_API_KEY}`
     ).then(async (res) => {
-      console.log("Matrix Res: ", res.data.rows[0].elements);
-
       const fullDistance = res.data.rows[0].elements[0].distance.text;
       const indexOfDistance = fullDistance.indexOf(" ");
       const distanceString = fullDistance.substr(0, indexOfDistance);
