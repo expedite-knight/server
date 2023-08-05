@@ -65,6 +65,9 @@ router.post("/register", validateRegistration, async (req, res) => {
       console.log("Email not already taken")
     );
 
+    console.log("email: ", email);
+    console.log("already exists: ", alreadyExists);
+
     if (!alreadyExists) {
       const hashedPassword = hashPassword(req.body.password);
 
