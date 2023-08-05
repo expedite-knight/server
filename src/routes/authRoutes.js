@@ -90,8 +90,11 @@ router.put("/update", validateUserUpdate, async (req, res) => {
   const hasError = !error.isEmpty();
   const { firstName, lastName, password } = req.body;
 
-  //if the password is empty then skip
-  if (hasError && password.trim() !== "") {
+  if (
+    (hasError && password.trim() !== "") ||
+    firstName.trim() == "" ||
+    lastName.trim() == ""
+  ) {
     res.send({ status: 422, body: { error: error.array() } });
   } else {
     const currentUser = await User.findById(req.user.user_id).catch((err) =>
