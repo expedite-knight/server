@@ -61,12 +61,9 @@ router.post("/register", validateRegistration, async (req, res) => {
     if (!email || !firstName || !lastName || !password)
       res.send({ status: 401, message: "all fields requried" });
 
-    const alreadyExists = User.findOne({ email: email }).catch((err) =>
+    const alreadyExists = await User.findOne({ email: email }).catch((err) =>
       console.log("Email not already taken")
     );
-
-    console.log("email: ", email);
-    console.log("already exists: ", alreadyExists);
 
     if (!alreadyExists) {
       const hashedPassword = hashPassword(req.body.password);
