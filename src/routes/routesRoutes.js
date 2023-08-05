@@ -185,12 +185,16 @@ router.post("/update", validateRouteUpdate, async (req, res) => {
     };
 
     if (routeDb) {
-      routeDb.routeName = name;
-      routeDb.interval = formattedInterval();
-      routeDb.subscribers = formattedSubscribers;
-      await routeDb.save();
+      if (routeDb.active) {
+        res.send({ status: 409, body: { message: RES_TYPES.ALREADY_ACTIVE } });
+      } else {
+        routeDb.routeName = name;
+        routeDb.interval = formattedInterval();
+        routeDb.subscribers = formattedSubscribers;
+        await routeDb.save();
 
-      res.send({ status: 204, body: { message: RES_TYPES.UPDATED } });
+        res.send({ status: 204, body: { message: RES_TYPES.UPDATED } });
+      }
     } else {
       res.send({ status: 404, body: { message: RES_TYPES.NOT_FOUND } });
     }
