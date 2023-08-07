@@ -62,7 +62,7 @@ const handleReceiveMessage = async (message, from) => {
 };
 
 const sendActivationMessage = async (subscriber, route, eta) => {
-  const message = `ACTIVATED: ${route.creator.firstName} ${route.creator.lastName} has started a route to ${route.destination} with id: ${route._id}. ${route.creator.firstName} is currently ${eta.mi} mi. or ${eta.min} min. away with an ETA of ${eta.time}. If you no longer want to be apart of this route, respond with the route id.`;
+  const message = `ACTIVATED: ${route.creator.firstName} ${route.creator.lastName} has started a route to ${route.destination} with id: ${route._id}. ${route.creator.firstName} is currently ${eta.mi} mi. or ${eta.min} min. away with an ETA of ${eta.time}. You can track the route online by clicking this link https://wwww.expediteknight.com/finder?route=${route._id}. If you no longer want to be apart of this route, respond with the route id.`;
 
   await handleSendMessage(subscriber, message);
 };
