@@ -11,14 +11,11 @@ const calculateETA = async (route, currentLocation, offset) => {
 
   const formattedDestination = route.destination.replaceAll(" ", "%20");
 
-  console.log("des: ", formattedDestination);
-  console.log("curr pos: ", currentLocation);
-
   try {
     const eta = await axios(
       `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${currentLocation}&destinations=${formattedDestination}&key=${MATRIX_API_KEY}`
     ).then(async (res) => {
-      console.log("res: ", res.data.rows[0].elements[0]);
+      console.log("res: ", JSON.parse(res.data.rows));
       const fullDistance = res.data.rows[0].elements[0].distance.text;
       const indexOfDistance = fullDistance.indexOf(" ");
       const distanceString = fullDistance.substr(0, indexOfDistance);
