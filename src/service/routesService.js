@@ -38,6 +38,7 @@ const createRoute = async (
   subscribers,
   interval,
   quickRoute,
+  deliveryMode,
   client
 ) => {
   const currentUser = await User.findById(client.user_id).catch((err) =>
@@ -90,6 +91,7 @@ const createRoute = async (
       creator: currentUser,
       quickRoute: quickRoute,
       active: quickRoute,
+      deliveryMode: deliveryMode,
     }).catch((err) => console.log("Error creating route: ", err));
 
     currentUser.routes.push(route);
@@ -129,9 +131,14 @@ const activateRoute = async (
 
     const eta = await calculateETA(route, formattedLocation, offset);
 
+    route.startingDistance = eta.mi;
+    route.startingDistance = eta.min;
     route.updatedAt = new Date().getTime();
     route.active = true;
     route.warningSent = false;
+    route.halfwaySent = false;
+    route.hourAwaySent = false;
+
     await route.save();
 
     route.subscribers.forEach(
@@ -161,8 +168,6 @@ const activateRouteOverride = async (
   const alreadyActiveArray = client.routes.filter((route) => route.active);
 
   //deactivating the active route
-  //we might need another thing here too that says if its an override then we should deactive all routes
-  //before activating the overriding route just in case
   const deactivateRes = await deactivateRoute(
     alreadyActiveArray[0]._id,
     currentLocation,

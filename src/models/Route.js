@@ -1,11 +1,5 @@
 const mongoose = require("mongoose");
 
-//change subscribers to be verified numbers
-//when creating a new route if a number is not verified just
-//create a new verified number but have it as !verified
-//on the app show an icon on the route to display someones
-//number is not verified, when you click on details it will
-//show you exactly which numbers are verified and which are not
 const RouteSchema = new mongoose.Schema({
   creator: {
     type: mongoose.SchemaTypes.ObjectId,
@@ -21,6 +15,10 @@ const RouteSchema = new mongoose.Schema({
     type: mongoose.SchemaTypes.Boolean,
     default: true,
   },
+  deliveryMode: {
+    type: mongoose.SchemaTypes.Boolean,
+    default: false,
+  },
   interval: {
     type: mongoose.SchemaTypes.Number,
   },
@@ -28,12 +26,26 @@ const RouteSchema = new mongoose.Schema({
     type: [mongoose.SchemaTypes.ObjectId],
     ref: "VerifiedNumber",
   },
+  halfwaySent: {
+    type: mongoose.SchemaTypes.Boolean,
+    default: false,
+  },
+  hourAwaySent: {
+    type: mongoose.SchemaTypes.Boolean,
+    default: false,
+  },
   warningSent: {
     type: mongoose.SchemaTypes.Boolean,
     default: false,
   },
   active: {
     type: mongoose.SchemaTypes.Boolean,
+  },
+  startingDistance: {
+    type: mongoose.SchemaTypes.Number,
+  },
+  startingDuration: {
+    type: mongoose.SchemaTypes.Number,
   },
   activeLocation: {
     type: {

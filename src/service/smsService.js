@@ -111,6 +111,14 @@ const sendQuoteMessage = async (quote) => {
   await handleSendMessage("+18454223301", message);
 };
 
+const sendHalfwayMessage = async (subscriber, route, eta) => {
+  //logic
+};
+
+const sendHourAwayMessage = async (subscriber, route, eta) => {
+  //logic
+};
+
 const handleVerifyNumber = async (number) => {
   const optionalNumber = await VerifiedNumber.findOne({
     number: number,
@@ -180,6 +188,8 @@ module.exports = {
   sendArrivalMessage,
   sendDeactivationMessage,
   sendCancellationMessage,
+  sendHalfwayMessage,
+  sendHourAwayMessage,
   sendQuoteMessage,
   formatSubscriber,
 };

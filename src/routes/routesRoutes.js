@@ -70,6 +70,7 @@ router.post("/create", validateRouteCreation, async (req, res) => {
       routeName,
       active,
       quickRoute,
+      deliveryMode,
     } = req.body;
 
     const result = await createRoute(
@@ -78,6 +79,7 @@ router.post("/create", validateRouteCreation, async (req, res) => {
       subscribers,
       interval,
       quickRoute,
+      deliveryMode,
       req.user
     );
     res.send({ status: 201, body: { message: RES_TYPES.CREATED } });
