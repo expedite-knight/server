@@ -209,6 +209,10 @@ const deactivateRoute = async (routeId, currentLocation, offset) => {
 
   route.active = false;
   route.warningSent = false;
+  route.halfwaySent = false;
+  route.hourAwaySent = false;
+  route.startingDistance = 0;
+  route.startingDuration = 0;
   route.activeLocation = {
     lat: "0",
     long: "0",

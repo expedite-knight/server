@@ -59,8 +59,8 @@ const updateLocation = async (req, res) => {
         );
       } else {
         activeRoute.activeLocation = {
-          lat: "35.227085",
-          long: "-80.843124",
+          lat: "0",
+          long: "0",
         };
 
         activeRoute.active = false;
