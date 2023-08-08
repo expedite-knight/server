@@ -20,7 +20,8 @@ const calculateETA = async (route, currentLocation, offset) => {
       const distanceString = fullDistance.substr(0, indexOfDistance);
       const distanceNum = Number(distanceString);
 
-      const fullDuration = res.data.rows[0].elements[0].duration.text;
+      const fullDuration =
+        res.data.rows[0].elements[0].duration_in_traffic.text;
       const indexOfDuration = fullDuration.indexOf(" ");
       const durationString = fullDuration.substr(0, indexOfDuration);
       const durationNum = Number(durationString);
