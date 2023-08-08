@@ -6,6 +6,7 @@ const { verifyJwt } = require("../service/authService");
 const moment = require("moment/moment");
 const { RES_TYPES } = require("../utils/helper");
 
+//build failed for no reason, network insecurity i think
 const calculateETA = async (route, currentLocation, offset) => {
   const { MATRIX_API_KEY } = process.env;
 
