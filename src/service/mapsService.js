@@ -44,6 +44,7 @@ const calculateETA = async (route, currentLocation, offset) => {
         const totalInMins = Number(hours) * 60 + Number(mins);
         durationNum = Number(totalInMins);
       }
+      console.log("DUR NUM: ", durationNum, "DIS NUM: ", distanceNum);
 
       if (convertKmToMi(distanceNum) <= 0.05 || durationNum <= 1) {
         return {
