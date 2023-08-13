@@ -25,10 +25,10 @@ const calculateETA = async (route, currentLocation, offset) => {
       const fullDuration = res.data.rows[0].elements[0].duration.text;
       console.log("FULL DUR: ", fullDuration);
       if (fullDuration.indexOf("hours") != -1) {
-        const hours = fullDuration.substring(0, fullDistance.indexOf("hours"));
+        const hours = fullDuration.substring(0, fullDuration.indexOf("hours"));
         console.log("HOURS: ", hours);
         const mins = fullDuration.substring(
-          fullDuration.indexOf("hours") + "hours".length(),
+          fullDuration.indexOf("hours") + "hours".length,
           fullDuration.indexOf("mins")
         );
         console.log("MINS: ", mins);
