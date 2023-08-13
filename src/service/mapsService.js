@@ -17,11 +17,13 @@ const calculateETA = async (route, currentLocation, offset) => {
       `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${currentLocation}&destinations=${formattedDestination}&key=${MATRIX_API_KEY}`
     ).then(async (res) => {
       const fullDistance = res.data.rows[0].elements[0].distance.text;
+      console.log("FULL DIS: ", fullDistance);
       const indexOfDistance = fullDistance.indexOf(" ");
       const distanceString = fullDistance.substr(0, indexOfDistance);
       const distanceNum = Number(distanceString);
 
       const fullDuration = res.data.rows[0].elements[0].duration.text;
+      console.log("FULL DUR: ", fullDuration);
       const indexOfDuration = fullDuration.indexOf(" ");
       const durationString = fullDuration.substr(0, indexOfDuration);
       const durationNum = Number(durationString);

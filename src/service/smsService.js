@@ -80,7 +80,7 @@ const sendUpdateMessage = async (subscriber, route, eta) => {
 };
 
 const sendWarningMessage = async (subscriber, route, eta) => {
-  const message = `WARNING: ${route.creator.firstName} ${route.creator.lastName} is approximately 5 mins away and will arrive at ${eta.time}`;
+  const message = `WARNING: ${route.creator.firstName} ${route.creator.lastName} is approximately 10 mins away and will arrive at ${eta.time}`;
 
   await handleSendMessage(subscriber, message);
 };
