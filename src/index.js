@@ -22,6 +22,7 @@ const routesRoutes = require("./routes/routesRoutes");
 const mapsRoutes = require("./routes/mapsRoutes");
 const quotesRoutes = require("./routes/quotesRoutes");
 const analyticsRoutes = require("./routes/analyticsRoutes");
+const reviewRoutes = require("./routes/reviewRoutes");
 const { RES_TYPES } = require("./utils/helper");
 
 app.use(
@@ -48,6 +49,7 @@ app.use("/api/v1/routes", routesRoutes);
 app.use("/api/v1/maps", mapsRoutes);
 app.use("/api/v1/quotes", quotesRoutes);
 app.use("/api/v1/analytics", analyticsRoutes);
+app.use("/api/v1/reviews", reviewRoutes);
 
 server.listen(PORT, "0.0.0.0", () =>
   console.log(`Server running on port: ${PORT}`)

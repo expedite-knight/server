@@ -110,6 +110,19 @@ const validateRouteCreation = [
     .trim(),
 ];
 
+const validateReview = [
+  check("rating", "Must give a rating 1-5").notEmpty().trim().escape(),
+  check("anon", "Must specify whether your rating is anonymous or not")
+    .notEmpty()
+    .escape(),
+  check("name", "Please enter your name").notEmpty().trim().escape().optional(),
+  check("body", "Please enter a review body")
+    .notEmpty()
+    .trim()
+    .escape()
+    .optional(),
+];
+
 const validateLocateRoute = [
   check("routeId", "Not a valid input").notEmpty().trim().escape(),
 ];
@@ -123,4 +136,5 @@ module.exports = {
   validateRouteUpdate,
   validateLocateRoute,
   validateRouteCreation,
+  validateReview,
 };

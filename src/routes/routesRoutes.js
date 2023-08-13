@@ -59,20 +59,19 @@ router.use((req, res, next) => {
 router.post("/create", validateRouteCreation, async (req, res) => {
   const error = validationResult(req).formatWith(({ msg }) => msg);
   const hasError = !error.isEmpty();
+  const {
+    destination,
+    subscribers,
+    interval,
+    routeName,
+    active,
+    quickRoute,
+    deliveryMode,
+  } = req.body;
 
-  if (hasError) {
+  if (hasError && !deliveryMode) {
     res.send({ status: 422, body: { message: error.array() } });
   } else {
-    const {
-      destination,
-      subscribers,
-      interval,
-      routeName,
-      active,
-      quickRoute,
-      deliveryMode,
-    } = req.body;
-
     const result = await createRoute(
       routeName,
       destination,
