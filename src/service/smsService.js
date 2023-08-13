@@ -62,7 +62,20 @@ const handleReceiveMessage = async (message, from) => {
 };
 
 const sendActivationMessage = async (subscriber, route, eta) => {
-  const message = `ACTIVATED: ${route.creator.firstName} ${route.creator.lastName} has started a route to ${route.destination} with id: ${route._id}. ${route.creator.firstName} is currently ${eta.mi} mi. or ${eta.min} min. away with an ETA of ${eta.time}. You can track the route online by clicking this link https://www.expediteknight.com/finder?route=${route._id}. If you no longer want to be apart of this route, respond with the route id.`;
+  let etaDurationString = "";
+  if (eta.min >= 60) {
+    const hours = Math.floor(eta.mins / 60);
+    const mins = eta.mins - hours * 60;
+    etaDurationString = hours
+      .concat(" hrs. and ")
+      .concat(mins)
+      .concat(" mins.");
+    console.log("ETA STRING: ", etaDurationString);
+  } else {
+    etaDurationString = eta.min.concat(" mins.");
+  }
+
+  const message = `ACTIVATED: ${route.creator.firstName} ${route.creator.lastName} has started a route to ${route.destination} with id: ${route._id}. ${route.creator.firstName} is currently ${eta.mi} mi. or ${etaDurationString} away with an ETA of ${eta.time}. You can track the route online by clicking this link https://www.expediteknight.com/finder?route=${route._id}. If you no longer want to be apart of this route, respond with the route id.`;
 
   await handleSendMessage(subscriber, message);
 };
@@ -74,7 +87,20 @@ const sendUnSubMessage = async (subscriber, route, eta) => {
 };
 
 const sendUpdateMessage = async (subscriber, route, eta) => {
-  const message = `UPDATE: ${route.creator.firstName} ${route.creator.lastName} is approximately ${eta.mi} mi. or ${eta.min} min. away with an ETA of ${eta.time}`;
+  let etaDurationString = "";
+  if (eta.min >= 60) {
+    const hours = Math.floor(eta.mins / 60);
+    const mins = eta.mins - hours * 60;
+    etaDurationString = hours
+      .concat(" hrs. and ")
+      .concat(mins)
+      .concat(" mins.");
+    console.log("ETA STRING: ", etaDurationString);
+  } else {
+    etaDurationString = eta.min.concat(" mins.");
+  }
+
+  const message = `UPDATE: ${route.creator.firstName} ${route.creator.lastName} is approximately ${eta.mi} mi. or ${etaDurationString} away with an ETA of ${eta.time}`;
 
   await handleSendMessage(subscriber, message);
 };
@@ -92,7 +118,20 @@ const sendArrivalMessage = async (subscriber, route, eta) => {
 };
 
 const sendDeactivationMessage = async (subscriber, route, eta) => {
-  const message = `DEACTIVATED: ${route.creator.firstName} ${route.creator.lastName} has deactivated route: ${route._id} approximately ${eta.mi} mi. or ${eta.min} min. away from ${route.destination}`;
+  let etaDurationString = "";
+  if (eta.min >= 60) {
+    const hours = Math.floor(eta.mins / 60);
+    const mins = eta.mins - hours * 60;
+    etaDurationString = hours
+      .concat(" hrs. and ")
+      .concat(mins)
+      .concat(" mins.");
+    console.log("ETA STRING: ", etaDurationString);
+  } else {
+    etaDurationString = eta.min.concat(" mins.");
+  }
+
+  const message = `DEACTIVATED: ${route.creator.firstName} ${route.creator.lastName} has deactivated route: ${route._id} approximately ${eta.mi} mi. or ${etaDurationString} away from ${route.destination}`;
 
   await handleSendMessage(subscriber, message);
 };
