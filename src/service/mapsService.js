@@ -17,7 +17,6 @@ const calculateETA = async (route, currentLocation, offset) => {
       `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${currentLocation}&destinations=${formattedDestination}&key=${MATRIX_API_KEY}`
     ).then(async (res) => {
       const fullDistance = res.data.rows[0].elements[0].distance.text;
-      console.log("FULL DIS: ", fullDistance);
       const indexOfDistance = fullDistance.indexOf(" ");
       const distanceString = fullDistance.substr(0, indexOfDistance);
       const distanceNum = Number(distanceString);
@@ -28,7 +27,6 @@ const calculateETA = async (route, currentLocation, offset) => {
       let durationNum = Number(durationString);
 
       //if the duration is longer than an hour then it will account for that
-      console.log("FULL DUR: ", fullDuration);
       if (fullDuration.indexOf("hours") != -1) {
         const hours = fullDuration.substring(0, fullDuration.indexOf("hours"));
         const mins = fullDuration.substring(
@@ -37,8 +35,15 @@ const calculateETA = async (route, currentLocation, offset) => {
         );
         const totalInMins = Number(hours) * 60 + Number(mins);
         durationNum = Number(totalInMins);
+      } else if (fullDuration.indexOf("hour") != -1) {
+        const hours = fullDuration.substring(0, fullDuration.indexOf("hour"));
+        const mins = fullDuration.substring(
+          fullDuration.indexOf("hour") + "hour".length,
+          fullDuration.indexOf("mins")
+        );
+        const totalInMins = Number(hours) * 60 + Number(mins);
+        durationNum = Number(totalInMins);
       }
-      console.log("DUR NUM: ", durationNum);
 
       if (convertKmToMi(distanceNum) <= 0.05 || durationNum <= 1) {
         return {
