@@ -132,7 +132,7 @@ const activateRoute = async (
     const eta = await calculateETA(route, formattedLocation, offset);
 
     route.startingDistance = eta.mi;
-    route.startingDistance = eta.min;
+    route.startingDuration = eta.min;
     route.updatedAt = new Date().getTime();
     route.active = true;
     route.warningSent = false;

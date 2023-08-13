@@ -64,8 +64,8 @@ const handleReceiveMessage = async (message, from) => {
 const sendActivationMessage = async (subscriber, route, eta) => {
   let etaDurationString = "";
   if (eta.min >= 60) {
-    const hours = Math.floor(eta.mins / 60);
-    const mins = eta.mins - hours * 60;
+    const hours = Math.floor(eta.min / 60);
+    const mins = eta.min - hours * 60;
     etaDurationString = hours
       .concat(" hrs. and ")
       .concat(mins)
@@ -89,8 +89,8 @@ const sendUnSubMessage = async (subscriber, route, eta) => {
 const sendUpdateMessage = async (subscriber, route, eta) => {
   let etaDurationString = "";
   if (eta.min >= 60) {
-    const hours = Math.floor(eta.mins / 60);
-    const mins = eta.mins - hours * 60;
+    const hours = Math.floor(eta.min / 60);
+    const mins = eta.min - hours * 60;
     etaDurationString = hours
       .concat(" hrs. and ")
       .concat(mins)
@@ -120,8 +120,8 @@ const sendArrivalMessage = async (subscriber, route, eta) => {
 const sendDeactivationMessage = async (subscriber, route, eta) => {
   let etaDurationString = "";
   if (eta.min >= 60) {
-    const hours = Math.floor(eta.mins / 60);
-    const mins = eta.mins - hours * 60;
+    const hours = Math.floor(eta.min / 60);
+    const mins = eta.min - hours * 60;
     etaDurationString = hours
       .concat(" hrs. and ")
       .concat(mins)
