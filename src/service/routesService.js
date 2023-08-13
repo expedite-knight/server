@@ -131,13 +131,16 @@ const activateRoute = async (
 
     const eta = await calculateETA(route, formattedLocation, offset);
 
-    route.startingDistance = eta.mi;
-    route.startingDuration = eta.min;
+    //i think the starting stuff is messed up so fix these
+    route.startingDistance = Number(eta.mi);
+    route.startingDuration = Number(eta.min);
     route.updatedAt = new Date().getTime();
     route.active = true;
     route.warningSent = false;
     route.halfwaySent = false;
     route.hourAwaySent = false;
+    console.log("STARTING DIS: ", Number(eta.mi));
+    console.log("STARTING DUR: ", Number(eta.min));
 
     await route.save();
 

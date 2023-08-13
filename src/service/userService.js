@@ -44,6 +44,8 @@ const updateLocation = async (req, res) => {
       formattedLocation,
       req.body.offset
     );
+    //this hasnt been added yet but this might be a good place to check
+    console.log("RETURNED ETA: ", eta);
 
     //if client has arrived(happens in delivery mode or not)
     if (eta.min === 0 || eta.mi === 0) {
@@ -126,6 +128,12 @@ const updateLocation = async (req, res) => {
       activeRoute.startingDistance / 2 <= eta.mi &&
       !activeRoute.halfwaySent
     ) {
+      console.log(
+        "START / 2: ",
+        activeRoute.startingDistance / 2,
+        "ETA MI: ",
+        eta.min
+      );
       activeRoute.subscribers.forEach(
         async (subscriber) =>
           await sendHalfwayMessage(subscriber, activeRoute, eta)
