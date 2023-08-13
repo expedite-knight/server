@@ -34,7 +34,7 @@ const calculateETA = async (route, currentLocation, offset) => {
           fullDuration.indexOf("hours") + "hours".length,
           fullDuration.indexOf("mins")
         );
-        const totalInMins = hours * 60 + mins;
+        const totalInMins = Number(hours) * 60 + Number(mins);
         console.log("TOT: ", totalInMins);
         durationNum = Number(totalInMins);
       }
