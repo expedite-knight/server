@@ -17,7 +17,8 @@ const calculateETA = async (route, currentLocation, offset) => {
     ).then(async (res) => {
       const fullDistance = res.data.rows[0].elements[0].distance.text;
       const indexOfDistance = fullDistance.indexOf(" ");
-      const distanceString = fullDistance.substr(0, indexOfDistance);
+      let distanceString = fullDistance.substr(0, indexOfDistance);
+      distanceString = distanceString.replaceAll(",", "");
       const distanceNum = Number(distanceString);
       console.log("FULL DIS: ", fullDistance);
 
@@ -28,7 +29,23 @@ const calculateETA = async (route, currentLocation, offset) => {
       console.log("FULL DUR: ", fullDuration);
 
       //if the duration is longer than an hour then it will account for that
-      if (fullDuration.indexOf("hours") != -1) {
+      if (fullDuration.indexOf("days") != -1) {
+        const days = fullDuration.substring(0, fullDuration.indexOf("days"));
+        const hours = fullDuration.substring(
+          fullDuration.indexOf("days") + "days".length,
+          fullDuration.indexOf("hours")
+        );
+        const totalInMins = Number(days) * 1440 + Number(hours) * 60;
+        durationNum = Number(totalInMins);
+      } else if (fullDuration.indexOf("day") != -1) {
+        const days = fullDuration.substring(0, fullDuration.indexOf("day"));
+        const hours = fullDuration.substring(
+          fullDuration.indexOf("day") + "day".length,
+          fullDuration.indexOf("hours")
+        );
+        const totalInMins = Number(days) * 1440 + Number(hours) * 60;
+        durationNum = Number(totalInMins);
+      } else if (fullDuration.indexOf("hours") != -1) {
         const hours = fullDuration.substring(0, fullDuration.indexOf("hours"));
         const mins = fullDuration.substring(
           fullDuration.indexOf("hours") + "hours".length,
