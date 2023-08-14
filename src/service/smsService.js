@@ -88,10 +88,7 @@ const sendUpdateMessage = async (subscriber, route, eta) => {
   if (eta.min >= 60) {
     const hours = Math.floor(eta.min / 60);
     const mins = eta.min - hours * 60;
-    etaDurationString = hours
-      .concat(" hrs. and ")
-      .concat(mins)
-      .concat(" mins.");
+    etaDurationString = hours + " hrs. and " + mins + " mins.";
     console.log("ETA STRING: ", etaDurationString);
   } else {
     etaDurationString = eta.min.concat(" mins.");
@@ -119,10 +116,7 @@ const sendDeactivationMessage = async (subscriber, route, eta) => {
   if (eta.min >= 60) {
     const hours = Math.floor(eta.min / 60);
     const mins = eta.min - hours * 60;
-    etaDurationString = hours
-      .concat(" hrs. and ")
-      .concat(mins)
-      .concat(" mins.");
+    etaDurationString = hours + " hrs. and " + mins + " mins.";
     console.log("ETA STRING: ", etaDurationString);
   } else {
     etaDurationString = eta.min.concat(" mins.");

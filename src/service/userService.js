@@ -49,6 +49,8 @@ const updateLocation = async (req, res) => {
       client.firstName,
       "ROUTE: ",
       activeRoute.destination,
+      "LOCATION: ",
+      formattedLocation,
       "ETA: ",
       eta
     );
