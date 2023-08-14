@@ -19,11 +19,13 @@ const calculateETA = async (route, currentLocation, offset) => {
       const indexOfDistance = fullDistance.indexOf(" ");
       const distanceString = fullDistance.substr(0, indexOfDistance);
       const distanceNum = Number(distanceString);
+      console.log("FULL DIS: ", fullDistance);
 
       const fullDuration = res.data.rows[0].elements[0].duration.text;
       const indexOfDuration = fullDuration.indexOf(" ");
       const durationString = fullDuration.substr(0, indexOfDuration);
       let durationNum = Number(durationString);
+      console.log("FULL DUR: ", fullDuration);
 
       //if the duration is longer than an hour then it will account for that
       if (fullDuration.indexOf("hours") != -1) {
@@ -43,6 +45,7 @@ const calculateETA = async (route, currentLocation, offset) => {
         const totalInMins = Number(hours) * 60 + Number(mins);
         durationNum = Number(totalInMins);
       }
+      console.log("DIS NUM: ", distanceNum, "DUR NUM: ", durationNum);
 
       if (convertKmToMi(distanceNum) <= 0.05 || durationNum <= 1) {
         return {

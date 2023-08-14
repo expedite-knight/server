@@ -19,7 +19,6 @@ router.get("/details", async (req, res) => {
 });
 
 router.post("/location/update", async (req, res) => {
-  console.log("USER: ", req?.user);
   const result = await updateLocation(req, res);
 
   if (result === RES_TYPES.SUCCESS) {
