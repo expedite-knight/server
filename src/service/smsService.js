@@ -69,7 +69,7 @@ const sendActivationMessage = async (subscriber, route, eta) => {
     etaDurationString = hours + " hrs. and " + mins + " mins.";
     console.log("ETA STRING: ", etaDurationString);
   } else {
-    etaDurationString = eta.min.concat(" mins.");
+    etaDurationString = eta.min + " mins.";
   }
 
   const message = `ACTIVATED: ${route.creator.firstName} ${route.creator.lastName} has started a route to ${route.destination} with id: ${route._id}. ${route.creator.firstName} is currently ${eta.mi} mi. or ${etaDurationString} away with an ETA of ${eta.time}. You can track the route online by clicking this link https://www.expediteknight.com/finder?route=${route._id}. If you no longer want to be apart of this route, respond with the route id.`;
@@ -91,7 +91,7 @@ const sendUpdateMessage = async (subscriber, route, eta) => {
     etaDurationString = hours + " hrs. and " + mins + " mins.";
     console.log("ETA STRING: ", etaDurationString);
   } else {
-    etaDurationString = eta.min.concat(" mins.");
+    etaDurationString = eta.min + " mins.";
   }
 
   const message = `UPDATE: ${route.creator.firstName} ${route.creator.lastName} is approximately ${eta.mi} mi. or ${etaDurationString} away with an ETA of ${eta.time}`;
@@ -119,7 +119,7 @@ const sendDeactivationMessage = async (subscriber, route, eta) => {
     etaDurationString = hours + " hrs. and " + mins + " mins.";
     console.log("ETA STRING: ", etaDurationString);
   } else {
-    etaDurationString = eta.min.concat(" mins.");
+    etaDurationString = eta.min + " mins.";
   }
 
   const message = `DEACTIVATED: ${route.creator.firstName} ${route.creator.lastName} has deactivated route: ${route._id} approximately ${eta.mi} mi. or ${etaDurationString} away from ${route.destination}`;
