@@ -44,16 +44,6 @@ const updateLocation = async (req, res) => {
       formattedLocation,
       req.body.offset
     );
-    console.log(
-      "ClIENT: ",
-      client.firstName,
-      "ROUTE: ",
-      activeRoute.destination,
-      "LOCATION: ",
-      formattedLocation,
-      "ETA: ",
-      eta
-    );
 
     //if client has arrived(happens in delivery mode or not)
     if (eta.min === 0 || eta.mi === 0) {
