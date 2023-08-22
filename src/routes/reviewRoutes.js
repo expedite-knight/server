@@ -4,29 +4,32 @@ require("dotenv").config();
 const { validateReview } = require("../utils/validator");
 const { validationResult } = require("express-validator");
 const Review = require("../models/Review");
-const { createReview } = require("../service/reviewService");
+const {
+  createReview,
+  getAllReviews,
+  calculateAverage,
+} = require("../service/reviewService");
 
 //this will create a new review
 router.post("/", validateReview, async (req, res) => {
   const error = validationResult(req).formatWith(({ msg }) => msg);
   const hasError = !error.isEmpty();
 
-  if (hasError) {
+  if (hasError && !req.body.anon && req.body.name?.trim() === "") {
     res.send({ status: 422, body: { message: error.array() } });
   } else {
     const { name, rating, anon, body } = req.body;
 
-    const res = await createReview({ rating, anon, name, body });
-    res.send({ status: 200, body: { message: res } });
+    const result = await createReview({ rating, anon, name, body });
+    res.send({ status: 200, body: { message: result } });
   }
 });
 
+//this will get all reviews
 router.get("/", async (req, res) => {
-  const reviews = await Review.find({}).catch((err) =>
-    console.log("No reviews found")
-  );
-
-  res.send({ status: 200, body: { reviews: reviews } });
+  const reviews = await getAllReviews(JSON.parse(req.query.page));
+  const { averageRating, total } = await calculateAverage();
+  res.send({ status: 200, body: { reviews, averageRating, total } });
 });
 
 router.get("/:reviewId", async (req, res) => {

@@ -21,6 +21,7 @@ const {
 const { validationResult } = require("express-validator");
 const { formatSubscriber } = require("../service/smsService");
 const VerifiedNumber = require("../models/VerifiedNumber");
+const User = require("../models/User");
 
 router.get("/", (req, res) => {
   res.send({ status: 200, message: "Routes endpoint" });
@@ -116,9 +117,14 @@ router.post("/deactivate", async (req, res) => {
   const { route, currentLocation, offset } = req.body;
 
   const result = await deactivateRoute(route, currentLocation, offset);
+  const client = await User.findById(req.user.user_id)
+    .populate("routes")
+    .catch((err) => {
+      console.log("Could not find user.");
+    });
 
   if (result === RES_TYPES.SUCCESS) {
-    res.send({ status: 200, body: { message: result } });
+    res.send({ status: 200, body: { message: result, routes: client.routes } });
   } else {
     res.send({ status: 404, body: { message: result } });
   }
@@ -126,9 +132,14 @@ router.post("/deactivate", async (req, res) => {
 
 router.post("/deactivate/current", async (req, res) => {
   const result = await deactivateCurrentActiveRoute(req.user);
+  const client = await User.findById(req.user.user_id)
+    .populate("routes")
+    .catch((err) => {
+      console.log("Could not find user.");
+    });
 
   if (result === RES_TYPES.SUCCESS) {
-    res.send({ status: 200, body: { message: result } });
+    res.send({ status: 200, body: { message: result, routes: client.routes } });
   } else {
     res.send({ status: 404, body: { message: result } });
   }

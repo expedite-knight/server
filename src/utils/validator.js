@@ -116,11 +116,7 @@ const validateReview = [
     .notEmpty()
     .escape(),
   check("name", "Please enter your name").notEmpty().trim().escape().optional(),
-  check("body", "Please enter a review body")
-    .notEmpty()
-    .trim()
-    .escape()
-    .optional(),
+  check("body", "Please enter a review body").trim().escape().optional(),
 ];
 
 const validateLocateRoute = [

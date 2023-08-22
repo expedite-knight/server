@@ -220,7 +220,8 @@ const deactivateRoute = async (routeId, currentLocation, offset) => {
     long: "0",
   };
 
-  await route.save();
+  if (route.quickRoute) await route.deleteOne();
+  else await route.save();
 
   return RES_TYPES.SUCCESS;
 };
@@ -236,7 +237,18 @@ const deactivateCurrentActiveRoute = async (userId) => {
     .catch((err) => console.log("No active routes"));
 
   if (!activeRoute) return RES_TYPES.NOT_FOUND;
-  activeRoute.active = false;
+
+  activateRoute.active = false;
+  activateRoute.warningSent = false;
+  activateRoute.halfwaySent = false;
+  activateRoute.hourAwaySent = false;
+  activateRoute.startingDistance = 0;
+  activateRoute.startingDuration = 0;
+  activateRoute.activeLocation = {
+    lat: "0",
+    long: "0",
+  };
+
   await activeRoute.save();
 
   //do not need to wait here so do not need to wrap in Promise.all syntax

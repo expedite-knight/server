@@ -20,8 +20,14 @@ const getReview = async (reviewId) => {
   //logic to create get the review
 };
 
-const getAllReviews = async () => {
-  //logic to create get all reviews
+const getAllReviews = async (page) => {
+  const limit = 10;
+  const reviews = await Review.find({})
+    .limit(limit * 1)
+    .skip((page - 1) * limit)
+    .sort({ updatedAt: -1 })
+    .catch((err) => console.log("No reviews found"));
+  return reviews;
 };
 
 const getFavoritedReviews = async () => {
@@ -30,9 +36,20 @@ const getFavoritedReviews = async () => {
   //our favorite reviews to show
 };
 
+const calculateAverage = async () => {
+  const reviews = await Review.find({});
+  let average = 0;
+  const total = reviews.length;
+
+  reviews.forEach((review) => (average += review.rating));
+
+  return { averageRating: average / total, total };
+};
+
 module.exports = {
   createReview,
   getFavoritedReviews,
   getReview,
   getAllReviews,
+  calculateAverage,
 };
