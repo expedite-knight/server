@@ -20,9 +20,9 @@ const getReview = async (reviewId) => {
   //logic to create get the review
 };
 
-const getAllReviews = async (page) => {
+const getAllReviews = async (page, filter) => {
   const limit = 10;
-  const reviews = await Review.find({})
+  const reviews = await Review.find(filter ? { rating: filter } : {})
     .limit(limit * 1)
     .skip((page - 1) * limit)
     .sort({ updatedAt: -1 })

@@ -9,6 +9,7 @@ const {
   getAllReviews,
   calculateAverage,
 } = require("../service/reviewService");
+const { RES_TYPES } = require("../utils/helper");
 
 //this will create a new review
 router.post("/", validateReview, async (req, res) => {
@@ -27,9 +28,22 @@ router.post("/", validateReview, async (req, res) => {
 
 //this will get all reviews
 router.get("/", async (req, res) => {
-  const reviews = await getAllReviews(JSON.parse(req.query.page));
-  const { averageRating, total } = await calculateAverage();
-  res.send({ status: 200, body: { reviews, averageRating, total } });
+  const { filter, page } = req.query;
+
+  if (page) {
+    const reviews = await getAllReviews(JSON.parse(page), JSON.parse(filter));
+    const { averageRating, total } = await calculateAverage();
+    res.send({ status: 200, body: { reviews, averageRating, total } });
+  } else {
+    res.send({ status: 404, body: { error: RES_TYPES.NOT_FOUND } });
+  }
+});
+
+router.get("/favorites", async (req, res) => {
+  const reviews = await Review.find({ favorite: true })
+    .limit(3)
+    .catch((err) => console.log("Could not find any favorited reviews"));
+  res.send({ status: 200, body: { reviews: reviews } });
 });
 
 router.get("/:reviewId", async (req, res) => {
