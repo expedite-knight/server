@@ -6,6 +6,7 @@ const {
   sendArrivalMessage,
   sendHalfwayMessage,
   sendHourAwayMessage,
+  sendHourLateMessage,
 } = require("../service/smsService");
 const { calculateETA } = require("../service/mapsService");
 const { RES_TYPES } = require("../utils/helper");
@@ -13,7 +14,7 @@ require("dotenv").config();
 
 //account for delivery mode now
 const updateLocation = async (req, res) => {
-  const client = await User.findById(req.user.user_id)
+  const client = await User.findById(req?.user?.user_id)
     .populate("routes")
     .catch((err) => {
       console.log("Could not find user.");
@@ -39,6 +40,7 @@ const updateLocation = async (req, res) => {
       .concat("%2C")
       .concat(JSON.stringify(req.body.long));
 
+    //now there is an extra prop called currentArrivalTimeInMS
     const eta = await calculateETA(
       activeRoute,
       formattedLocation,
@@ -133,6 +135,20 @@ const updateLocation = async (req, res) => {
 
       activeRoute.halfwaySent = true;
       activeRoute.updatedAt = new Date().getTime();
+      await activeRoute.save();
+
+      //Delivery Mode: if client is over halfway and eta changes by over an hour
+    } else if (
+      activeRoute.deliveryMode &&
+      activeRoute.halfwaySent &&
+      eta.currentArrivalTimeInMS + 60 * 60000 >=
+        activeRoute.startingDuration * 60000
+    ) {
+      activeRoute.subscribers.forEach(async (subsriber) => {
+        await sendHourLateMessage(subsriber, activeRoute, eta);
+      });
+      //dont know if this is the right way to do it or if it works so TEST
+      activeRoute.startingDuration = eta.min;
       await activeRoute.save();
     } else {
       console.log("No relevant intervals have been met.");

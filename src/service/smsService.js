@@ -153,6 +153,12 @@ const sendHourAwayMessage = async (subscriber, route, eta) => {
   await handleSendMessage(subscriber, message);
 };
 
+const sendHourLateMessage = async (subscriber, route, eta) => {
+  const message = `LATE: ${route.creator.firstName} ${route.creator.lastName} is running at least an hour late with a new ETA of ${eta.time}. We apologize for the delay but thank you for your patience.`;
+
+  await handleSendMessage(subscriber, message);
+};
+
 const handleVerifyNumber = async (number) => {
   const optionalNumber = await VerifiedNumber.findOne({
     number: number,
@@ -224,6 +230,7 @@ module.exports = {
   sendCancellationMessage,
   sendHalfwayMessage,
   sendHourAwayMessage,
+  sendHourLateMessage,
   sendQuoteMessage,
   formatSubscriber,
 };

@@ -8,6 +8,8 @@ const {
   generateJwt,
   verifyJwt,
   logoutUser,
+  generateRefreshToken,
+  verifyRefresh,
 } = require("../service/authService");
 require("dotenv").config();
 const {
@@ -31,22 +33,34 @@ router.post("/login", validateLogin, async (req, res) => {
     if (!user) res.send({ status: 400, body: { message: "unauthorized" } });
     else {
       const token = await generateJwt(user);
+      const refreshToken = await generateRefreshToken(user);
 
-      res.send({ status: 200, body: { jwtToken: token } });
+      res.send({
+        status: 200,
+        body: { jwtToken: token, refreshToken: refreshToken },
+      });
     }
   }
 });
 
 router.get("/verify", verifyJwt, async (req, res) => {
-  console.log("VERIFY: ", req.body);
   res.send({ status: 200, body: { message: RES_TYPES.AUTHORIZED } });
 });
 
+router.get("/verify/refresh", async (req, res) => {
+  const result = await verifyRefresh(req, res);
+  if (result !== RES_TYPES.UNAUTHORIZED) {
+    res.send({ status: 200, body: result });
+  } else {
+    res.send({ status: 401, bdoy: { error: "Token invalid" } });
+  }
+});
+
 router.post("/logout", async (req, res, next) => {
-  await logoutUser(req, res);
+  const result = await logoutUser(req, res);
   res.send({
     status: 200,
-    body: { message: "User has logged out successfully" },
+    body: { message: result },
   });
 });
 

@@ -3,7 +3,7 @@ const User = require("../models/User");
 const { comparePassword } = require("../utils/helper");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
-const { JWT_SECRET } = process.env;
+const { JWT_SECRET, REFRESH_SECRET } = process.env;
 const { RES_TYPES } = require("../utils/helper");
 
 //do better user validation
@@ -28,9 +28,14 @@ const validateUser = async (email, password) => {
 //in the example he saves the token to the user but idk why youd do that
 //change the expiration time to 1h later
 const generateJwt = async (user) => {
-  return jwt.sign({ user_id: user._id }, JWT_SECRET, { expiresIn: "24h" });
+  return jwt.sign({ user_id: user._id }, JWT_SECRET, { expiresIn: "1h" });
 };
 
+const generateRefreshToken = async (user) => {
+  return jwt.sign({ user_id: user._id }, REFRESH_SECRET, { expiresIn: "99h" });
+};
+
+//throw an error here maybe?
 const verifyJwt = async (req, res, next) => {
   const token =
     req.body.token ||
@@ -44,27 +49,55 @@ const verifyJwt = async (req, res, next) => {
       status: 403,
       body: { error: RES_TYPES.UNAUTHORIZED },
     });
+  } else {
+    try {
+      const decoded = jwt.verify(token, JWT_SECRET);
+      req.user = decoded;
+
+      return next();
+    } catch (err) {
+      console.log("Invalid token: ", token);
+      return res.send({
+        status: 401,
+        body: { error: RES_TYPES.UNAUTHORIZED },
+      });
+      //should we also clear the headers too?
+    }
+  }
+};
+
+const verifyRefresh = async (req, res) => {
+  const token =
+    req.body.token ||
+    req.query.token ||
+    req.headers["x-access-token"] ||
+    req.headers["authorization"];
+
+  if (!token) {
+    console.log("no refresh token presented");
+    return RES_TYPES.UNAUTHORIZED;
   }
   try {
-    console.log("decoding token: ", token);
-    console.log("secret: ", JWT_SECRET);
-    const decoded = jwt.verify(token, JWT_SECRET);
-    console.log("decoded: ", decoded);
+    const decoded = jwt.verify(token, REFRESH_SECRET);
     req.user = decoded;
+
+    //------error is thrown here----------
+    const jwtToken = await generateJwt({ _id: decoded.user_id });
+    //yeah there is no req.user so we need to extract req.user from the
+    //refresh token, take the id from the decoded var i think
+    const refreshToken = await generateRefreshToken({ _id: decoded.user_id });
+    //------------------------------------
+
+    return { jwtToken: jwtToken, refreshToken: refreshToken };
   } catch (err) {
-    console.log("Invalid token.");
-    return res.send({
-      status: 401,
-      body: { error: RES_TYPES.UNAUTHORIZED },
-    });
-    //should we also clear the headers too?
+    console.log("Invalid refresh token.");
+    return RES_TYPES.UNAUTHORIZED;
   }
-  return next();
 };
 
 const logoutUser = async (req, res) => {
   //not good enough, we need to destroy the token(expire it?)
-  return res;
+  return RES_TYPES.SUCCESS;
 };
 
 const handleUserUpdate = async (req, res) => {
@@ -75,5 +108,7 @@ module.exports = {
   validateUser,
   generateJwt,
   verifyJwt,
+  verifyRefresh,
   logoutUser,
+  generateRefreshToken,
 };
