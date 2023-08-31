@@ -32,11 +32,8 @@ router.post("/login", validateLogin, async (req, res) => {
 
     if (!user) res.send({ status: 400, body: { message: "unauthorized" } });
     else {
-      console.log("1");
       const token = await generateJwt(user);
-      console.log("2");
       const refreshToken = await generateRefreshToken(user);
-      console.log("3");
 
       res.send({
         status: 200,

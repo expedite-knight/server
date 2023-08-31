@@ -25,6 +25,7 @@ const validateUser = async (email, password) => {
   }
 };
 
+//try changing to 15m
 const generateJwt = async (user) => {
   return jwt.sign({ user_id: user._id }, JWT_SECRET, { expiresIn: "1h" });
 };

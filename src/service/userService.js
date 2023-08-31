@@ -144,6 +144,8 @@ const updateLocation = async (req, res) => {
       eta.currentArrivalTimeInMS + 60 * 60000 >=
         activeRoute.startingDuration * 60000
     ) {
+      console.log("curr arrival time: ", eta.currentArrivalTimeInMS);
+      console.log("starting eta: ", activeRoute.startingDuration);
       activeRoute.subscribers.forEach(async (subsriber) => {
         await sendHourLateMessage(subsriber, activeRoute, eta);
       });
