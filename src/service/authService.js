@@ -25,14 +25,13 @@ const validateUser = async (email, password) => {
   }
 };
 
-//in the example he saves the token to the user but idk why youd do that
-//change the expiration time to 1h later
 const generateJwt = async (user) => {
   return jwt.sign({ user_id: user._id }, JWT_SECRET, { expiresIn: "1h" });
 };
 
 const generateRefreshToken = async (user) => {
-  return jwt.sign({ user_id: user._id }, REFRESH_SECRET, { expiresIn: "99h" });
+  console.log("Refresh secret: ", REFRESH_SECRET);
+  return jwt.sign({ user_id: user._id }, REFRESH_SECRET, { expiresIn: "48h" });
 };
 
 //throw an error here maybe?
