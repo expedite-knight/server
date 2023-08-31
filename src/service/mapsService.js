@@ -66,14 +66,14 @@ const calculateETA = async (route, currentLocation, offset) => {
           mi: 0,
           min: 0,
           time: formatArrivalTime(durationNum, offset),
-          currentArrivalTimeInMS: new Date().getTime() + durationNum * 60000,
+          currentArrivalTimeInMS: durationNum,
         };
       } else {
         return {
           mi: convertKmToMi(distanceNum),
           min: durationNum,
           time: formatArrivalTime(durationNum, offset),
-          currentArrivalTimeInMS: new Date().getTime() + durationNum * 60000,
+          currentArrivalTimeInMS: durationNum,
         };
       }
     });
