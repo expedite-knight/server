@@ -68,6 +68,8 @@ router.post("/create", validateRouteCreation, async (req, res) => {
     active,
     quickRoute,
     deliveryMode,
+    currentLocation,
+    offset,
   } = req.body;
 
   if (hasError && !deliveryMode) {
@@ -80,8 +82,11 @@ router.post("/create", validateRouteCreation, async (req, res) => {
       interval,
       quickRoute,
       deliveryMode,
+      currentLocation,
+      offset,
       req.user
     );
+
     res.send({ status: 201, body: { message: RES_TYPES.CREATED } });
   }
 });

@@ -143,6 +143,7 @@ const updateLocation = async (req, res) => {
       activeRoute.halfwaySent &&
       eta.currentArrivalTimeInMS >= activeRoute.startingDuration * 60
     ) {
+      //seemed to fix it for now
       console.log("curr arrival time in MS: ", eta.currentArrivalTimeInMS);
       console.log("starting duration: ", activeRoute.startingDuration);
       activeRoute.subscribers.forEach(async (subsriber) => {

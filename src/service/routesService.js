@@ -39,6 +39,8 @@ const createRoute = async (
   interval,
   quickRoute,
   deliveryMode,
+  currentLocation,
+  offset,
   client
 ) => {
   const currentUser = await User.findById(client.user_id).catch((err) =>
@@ -93,6 +95,12 @@ const createRoute = async (
       active: quickRoute,
       deliveryMode: deliveryMode,
     }).catch((err) => console.log("Error creating route: ", err));
+
+    //work on this, quick routes do not get activated right away
+    //we need to send our current locale with this for it to work
+    if (route.quickRoute) {
+      await activateRoute(route._id, currentLocation, client, offset);
+    }
 
     currentUser.routes.push(route);
     await currentUser.save();
