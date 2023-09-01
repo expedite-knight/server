@@ -142,7 +142,7 @@ const updateLocation = async (req, res) => {
     } else if (
       activeRoute.deliveryMode &&
       activeRoute.halfwaySent &&
-      calculateDelay(eta.time, activeRoute.startingETA) >= 1
+      calculateDelay(eta.time, activeRoute.startingETA) >= 60
     ) {
       //seemed to fix it for now
       activeRoute.subscribers.forEach(async (subsriber) => {
@@ -167,10 +167,10 @@ const updateLocation = async (req, res) => {
 function calculateDelay(currentETA, initalETA) {
   const convertedCurrent = convertToMins(currentETA);
   const convertedInitial = convertToMins(initalETA);
-  console.log("curr: ", convertedCurrent);
-  console.log("init: ", convertedInitial);
+  const difference = convertedCurrent - convertedInitial;
+  console.log("Diff: ", difference);
 
-  return 0;
+  return difference;
 }
 
 const convertToMins = (eta) => {

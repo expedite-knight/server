@@ -31,7 +31,6 @@ const generateJwt = async (user) => {
 };
 
 const generateRefreshToken = async (user) => {
-  console.log("Refresh secret: ", REFRESH_SECRET);
   return jwt.sign({ user_id: user._id }, REFRESH_SECRET, { expiresIn: "48h" });
 };
 
