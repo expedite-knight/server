@@ -174,8 +174,8 @@ function calculateDelay(currentETA, initalETA) {
 }
 
 const convertToMins = (eta) => {
-  const parsedHour = Number(eta.substring(0, eta.indexOf(":")));
-  const parsedMin = Number(eta.substring(eta.indexOf(":"), eta.indexOf(" ")));
+  const parsedHour = eta.substring(0, eta.indexOf(":"));
+  const parsedMin = eta.substring(eta.indexOf(":"), eta.indexOf(" "));
 
   return parsedHour * 60 + parsedMin;
 };
