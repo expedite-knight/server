@@ -7,6 +7,7 @@ const { MessagingResponse } = require("twilio").twiml;
 const Route = require("../models/Route");
 const VerifiedNumber = require("../models/VerifiedNumber");
 const { RES_TYPES } = require("../utils/helper");
+const { formatCurrentDuration } = require("./mapsService");
 const { SECRET_SMS, SECRET_SMS_KEY } = process.env;
 
 const handleSendMessage = async (subscriber, message) => {
@@ -62,15 +63,7 @@ const handleReceiveMessage = async (message, from) => {
 };
 
 const sendActivationMessage = async (subscriber, route, eta) => {
-  let etaDurationString = "";
-  if (eta.min >= 60) {
-    const hours = Math.floor(eta.min / 60);
-    const mins = eta.min - hours * 60;
-    etaDurationString = hours + " hrs. and " + mins + " mins.";
-    console.log("ETA STRING: ", etaDurationString);
-  } else {
-    etaDurationString = eta.min + " mins.";
-  }
+  const etaDurationString = formatCurrentDuration(eta.min);
 
   const message = `ACTIVATED: ${route.creator.firstName} ${route.creator.lastName} has started a route to ${route.destination} with id: ${route._id}. ${route.creator.firstName} is currently ${eta.mi} mi. or ${etaDurationString} away with an ETA of ${eta.time}. You can track the route online by clicking this link https://www.expediteknight.com/finder?route=${route._id}. If you no longer want to be apart of this route, respond with the route id.`;
 
@@ -84,15 +77,7 @@ const sendUnSubMessage = async (subscriber, route, eta) => {
 };
 
 const sendUpdateMessage = async (subscriber, route, eta) => {
-  let etaDurationString = "";
-  if (eta.min >= 60) {
-    const hours = Math.floor(eta.min / 60);
-    const mins = eta.min - hours * 60;
-    etaDurationString = hours + " hrs. and " + mins + " mins.";
-    console.log("ETA STRING: ", etaDurationString);
-  } else {
-    etaDurationString = eta.min + " mins.";
-  }
+  const etaDurationString = formatCurrentDuration(eta.min);
 
   const message = `UPDATE: ${route.creator.firstName} ${route.creator.lastName} is approximately ${eta.mi} mi. or ${etaDurationString} away with an ETA of ${eta.time}`;
 
@@ -112,15 +97,7 @@ const sendArrivalMessage = async (subscriber, route, eta) => {
 };
 
 const sendDeactivationMessage = async (subscriber, route, eta) => {
-  let etaDurationString = "";
-  if (eta.min >= 60) {
-    const hours = Math.floor(eta.min / 60);
-    const mins = eta.min - hours * 60;
-    etaDurationString = hours + " hrs. and " + mins + " mins.";
-    console.log("ETA STRING: ", etaDurationString);
-  } else {
-    etaDurationString = eta.min + " mins.";
-  }
+  const etaDurationString = formatCurrentDuration(eta.min);
 
   const message = `DEACTIVATED: ${route.creator.firstName} ${route.creator.lastName} has deactivated route: ${route._id} approximately ${eta.mi} mi. or ${etaDurationString} away from ${route.destination}`;
 

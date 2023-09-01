@@ -46,8 +46,7 @@ const updateLocation = async (req, res) => {
       formattedLocation,
       req.body.offset
     );
-    console.log("curr arrival time in MS: ", eta.currentArrivalTimeInMS);
-    console.log("starting duration: ", activeRoute.startingDuration);
+    calculateDelay(eta.time, activeRoute.startingETA); //REMOVE
 
     //if client has arrived(happens in delivery mode or not)
     if (eta.min === 0 || eta.mi === 0) {
@@ -143,14 +142,15 @@ const updateLocation = async (req, res) => {
     } else if (
       activeRoute.deliveryMode &&
       activeRoute.halfwaySent &&
-      eta.currentArrivalTimeInMS >= activeRoute.startingDuration * 60
+      calculateDelay(eta.time, activeRoute.startingETA) >= 1
     ) {
       //seemed to fix it for now
       activeRoute.subscribers.forEach(async (subsriber) => {
         await sendHourLateMessage(subsriber, activeRoute, eta);
       });
       //dont know if this is the right way to do it or if it works so TEST
-      activeRoute.startingDuration = eta.min;
+      activeRoute.startingETA = eta.time;
+
       await activeRoute.save();
     } else {
       console.log("No relevant intervals have been met.");
@@ -162,6 +162,22 @@ const updateLocation = async (req, res) => {
   }
 
   return RES_TYPES.SUCCESS;
+};
+
+function calculateDelay(currentETA, initalETA) {
+  const convertedCurrent = convertToMins(currentETA);
+  const convertedInitial = convertToMins(initalETA);
+  console.log("current: ", convertedCurrent);
+  console.log("init: ", convertedInitial);
+
+  return 0;
+}
+
+const convertToMins = (eta) => {
+  const parsedHour = Number(eta.slice(0, eta.indexOf(":")));
+  const parsedMin = Number(eta.slice(eta.indexOf(":"), eta.indexOf(" ")));
+
+  return parsedHour * 60 + parsedMin;
 };
 
 module.exports = {

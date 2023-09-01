@@ -66,14 +66,12 @@ const calculateETA = async (route, currentLocation, offset) => {
           mi: 0,
           min: 0,
           time: formatArrivalTime(durationNum, offset),
-          currentArrivalTimeInMS: durationNum,
         };
       } else {
         return {
           mi: convertKmToMi(distanceNum),
           min: durationNum,
           time: formatArrivalTime(durationNum, offset),
-          currentArrivalTimeInMS: durationNum,
         };
       }
     });
@@ -94,6 +92,21 @@ const formatArrivalTime = (duration, offset) => {
   return arrivalTime;
 };
 
+const formatCurrentDuration = (min) => {
+  let etaDurationString = "";
+
+  if (min >= 60) {
+    const hours = Math.floor(min / 60);
+    const mins = min - hours * 60;
+    etaDurationString = hours + " hrs. and " + mins + " mins.";
+  } else {
+    etaDurationString = min + " mins.";
+  }
+
+  return etaDurationString;
+};
+
 module.exports = {
   calculateETA,
+  formatCurrentDuration,
 };

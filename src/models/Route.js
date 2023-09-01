@@ -47,6 +47,9 @@ const RouteSchema = new mongoose.Schema({
   startingDuration: {
     type: mongoose.SchemaTypes.Number,
   },
+  startingETA: {
+    type: mongoose.SchemaTypes.String,
+  },
   activeLocation: {
     type: {
       lat: mongoose.SchemaTypes.String,
