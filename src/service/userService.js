@@ -144,8 +144,6 @@ const updateLocation = async (req, res) => {
       eta.currentArrivalTimeInMS >= activeRoute.startingDuration * 60
     ) {
       //seemed to fix it for now
-      console.log("curr arrival time in MS: ", eta.currentArrivalTimeInMS);
-      console.log("starting duration: ", activeRoute.startingDuration);
       activeRoute.subscribers.forEach(async (subsriber) => {
         await sendHourLateMessage(subsriber, activeRoute, eta);
       });
@@ -160,6 +158,8 @@ const updateLocation = async (req, res) => {
     console.log("Client has no active routes");
     return RES_TYPES.SUCCESS;
   }
+  console.log("curr arrival time in MS: ", eta.currentArrivalTimeInMS);
+  console.log("starting duration: ", activeRoute.startingDuration);
 
   return RES_TYPES.SUCCESS;
 };
