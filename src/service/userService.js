@@ -46,6 +46,8 @@ const updateLocation = async (req, res) => {
       formattedLocation,
       req.body.offset
     );
+    console.log("curr arrival time in MS: ", eta.currentArrivalTimeInMS);
+    console.log("starting duration: ", activeRoute.startingDuration);
 
     //if client has arrived(happens in delivery mode or not)
     if (eta.min === 0 || eta.mi === 0) {
@@ -158,8 +160,6 @@ const updateLocation = async (req, res) => {
     console.log("Client has no active routes");
     return RES_TYPES.SUCCESS;
   }
-  console.log("curr arrival time in MS: ", eta.currentArrivalTimeInMS);
-  console.log("starting duration: ", activeRoute.startingDuration);
 
   return RES_TYPES.SUCCESS;
 };
