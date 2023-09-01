@@ -167,15 +167,15 @@ const updateLocation = async (req, res) => {
 function calculateDelay(currentETA, initalETA) {
   const convertedCurrent = convertToMins(currentETA);
   const convertedInitial = convertToMins(initalETA);
-  console.log("current: ", convertedCurrent);
-  console.log("init: ", convertedInitial);
 
   return 0;
 }
 
 const convertToMins = (eta) => {
-  const parsedHour = eta.substring(0, eta.indexOf(":"));
-  const parsedMin = eta.substring(eta.indexOf(":"), eta.indexOf(" "));
+  const parsedHour = eta.slice(0, eta.indexOf(":"));
+  const parsedMin = eta.slice(eta.indexOf(":"), eta.indexOf(" "));
+  console.log("hour: ", parsedHour);
+  console.log("min: ", parsedMin);
 
   return parsedHour * 60 + parsedMin;
 };
