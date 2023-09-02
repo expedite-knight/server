@@ -46,7 +46,8 @@ const updateLocation = async (req, res) => {
       formattedLocation,
       req.body.offset
     );
-    calculateDelay(eta.time, activeRoute.startingETA); //REMOVE
+    console.log("init: ", activeRoute.startingETA + 60 * 60000);
+    console.log("curr: ", new Date().getTime() + eta.min * 60000);
 
     //if client has arrived(happens in delivery mode or not)
     if (eta.min === 0 || eta.mi === 0) {
@@ -170,10 +171,7 @@ function calculateDelay(currentETA, initalETA) {
   // const convertedInitial = convertToMins(initalETA);
   // const difference = convertedCurrent - convertedInitial;
   // console.log("Diff: ", difference);
-
   // return difference;
-  console.log("init: ", activeRoute.startingETA + 60 * 60000);
-  console.log("curr: ", new Date().getTime() + eta.min * 60000);
 }
 
 // const convertToMins = (eta) => {
