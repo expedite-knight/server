@@ -142,7 +142,8 @@ const updateLocation = async (req, res) => {
     } else if (
       activeRoute.deliveryMode &&
       activeRoute.halfwaySent &&
-      calculateDelay(eta.time, activeRoute.startingETA) >= 60
+      activeRoute.startingETA + 60 * 60000 >=
+        new Date().getTime() + eta.min * 60000
     ) {
       //seemed to fix it for now
       activeRoute.subscribers.forEach(async (subsriber) => {
@@ -165,20 +166,22 @@ const updateLocation = async (req, res) => {
 };
 
 function calculateDelay(currentETA, initalETA) {
-  const convertedCurrent = convertToMins(currentETA);
-  const convertedInitial = convertToMins(initalETA);
-  const difference = convertedCurrent - convertedInitial;
-  console.log("Diff: ", difference);
+  // const convertedCurrent = convertToMins(currentETA);
+  // const convertedInitial = convertToMins(initalETA);
+  // const difference = convertedCurrent - convertedInitial;
+  // console.log("Diff: ", difference);
 
-  return difference;
+  // return difference;
+  console.log("init: ", activeRoute.startingETA + 60 * 60000);
+  console.log("curr: ", new Date().getTime() + eta.min * 60000);
 }
 
-const convertToMins = (eta) => {
-  const parsedHour = eta.slice(0, eta.indexOf(":"));
-  const parsedMin = eta.slice(eta.indexOf(":") + 1, eta.indexOf(" "));
+// const convertToMins = (eta) => {
+//   const parsedHour = eta.slice(0, eta.indexOf(":"));
+//   const parsedMin = eta.slice(eta.indexOf(":") + 1, eta.indexOf(" "));
 
-  return Number(parsedHour) * 60 + Number(parsedMin);
-};
+//   return Number(parsedHour) * 60 + Number(parsedMin);
+// };
 
 module.exports = {
   updateLocation,
