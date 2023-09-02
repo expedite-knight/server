@@ -141,7 +141,7 @@ const activateRoute = async (
 
     route.startingDistance = eta.mi;
     route.startingDuration = eta.min;
-    route.startingETA = eta.time;
+    route.startingETA = new Date().getTime() + eta.min * 60000;
     route.updatedAt = new Date().getTime();
     route.active = true;
     route.warningSent = false;
