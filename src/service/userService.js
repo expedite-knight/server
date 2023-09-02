@@ -143,7 +143,7 @@ const updateLocation = async (req, res) => {
     } else if (
       activeRoute.deliveryMode &&
       activeRoute.halfwaySent &&
-      activeRoute.startingETA + 60 * 60000 >=
+      activeRoute.startingETA + 60 * 60000 <=
         new Date().getTime() + eta.min * 60000
     ) {
       //seemed to fix it for now
