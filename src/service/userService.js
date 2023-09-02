@@ -151,7 +151,7 @@ const updateLocation = async (req, res) => {
         await sendHourLateMessage(subsriber, activeRoute, eta);
       });
       //dont know if this is the right way to do it or if it works so TEST
-      activeRoute.startingETA = eta.time;
+      activeRoute.startingETA = new Date().getTime() + eta.min * 60000;
 
       await activeRoute.save();
     } else {
