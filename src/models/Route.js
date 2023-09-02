@@ -48,7 +48,7 @@ const RouteSchema = new mongoose.Schema({
     type: mongoose.SchemaTypes.Number,
   },
   startingETA: {
-    type: mongoose.SchemaTypes.String,
+    type: mongoose.SchemaTypes.Number,
   },
   activeLocation: {
     type: {
