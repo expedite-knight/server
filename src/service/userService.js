@@ -46,8 +46,6 @@ const updateLocation = async (req, res) => {
       formattedLocation,
       req.body.offset
     );
-    console.log("init: ", activeRoute.startingETA + 60 * 60000);
-    console.log("curr: ", new Date().getTime() + eta.min * 60000);
 
     //if client has arrived(happens in delivery mode or not)
     if (eta.min === 0 || eta.mi === 0) {
