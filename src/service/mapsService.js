@@ -13,9 +13,9 @@ const calculateETA = async (route, currentLocation, offset) => {
 
   try {
     const eta = await axios(
-      `https://maps.googleapis.com/maps/api/distancematrix/json?departure_time=now?origins=${currentLocation}&destinations=${formattedDestination}&key=${MATRIX_API_KEY}`
+      `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${currentLocation}&destinations=${formattedDestination}&key=${MATRIX_API_KEY}`
     ).then(async (res) => {
-      console.log("dur w/ traffic: ", res.data[0].elements[0]);
+      console.log("dur w/ traffic: ", res.data[0].elements[0].distance.text);
       const fullDistance = res.data.rows[0].elements[0].distance.text;
       const indexOfDistance = fullDistance.indexOf(" ");
       let distanceString = fullDistance.substr(0, indexOfDistance);
