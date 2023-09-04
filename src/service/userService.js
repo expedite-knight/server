@@ -12,7 +12,6 @@ const { calculateETA } = require("../service/mapsService");
 const { RES_TYPES } = require("../utils/helper");
 require("dotenv").config();
 
-//account for delivery mode now
 const updateLocation = async (req, res) => {
   const client = await User.findById(req?.user?.user_id)
     .populate("routes")
@@ -40,7 +39,6 @@ const updateLocation = async (req, res) => {
       .concat("%2C")
       .concat(JSON.stringify(req.body.long));
 
-    //now there is an extra prop called currentArrivalTimeInMS
     const eta = await calculateETA(
       activeRoute,
       formattedLocation,
@@ -144,7 +142,6 @@ const updateLocation = async (req, res) => {
       activeRoute.startingETA + 60 * 60000 <=
         new Date().getTime() + eta.min * 60000
     ) {
-      //seemed to fix it for now
       activeRoute.subscribers.forEach(async (subsriber) => {
         await sendHourLateMessage(subsriber, activeRoute, eta);
       });
@@ -163,21 +160,6 @@ const updateLocation = async (req, res) => {
 
   return RES_TYPES.SUCCESS;
 };
-
-function calculateDelay(currentETA, initalETA) {
-  // const convertedCurrent = convertToMins(currentETA);
-  // const convertedInitial = convertToMins(initalETA);
-  // const difference = convertedCurrent - convertedInitial;
-  // console.log("Diff: ", difference);
-  // return difference;
-}
-
-// const convertToMins = (eta) => {
-//   const parsedHour = eta.slice(0, eta.indexOf(":"));
-//   const parsedMin = eta.slice(eta.indexOf(":") + 1, eta.indexOf(" "));
-
-//   return Number(parsedHour) * 60 + Number(parsedMin);
-// };
 
 module.exports = {
   updateLocation,

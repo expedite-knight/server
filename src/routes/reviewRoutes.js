@@ -40,9 +40,9 @@ router.get("/", async (req, res) => {
 });
 
 router.get("/favorites", async (req, res) => {
-  const reviews = await Review.find({ favorite: true })
+  const reviews = await Review.find({ rating: 5 })
     .limit(3)
-    .catch((err) => console.log("Could not find any favorited reviews"));
+    .catch((err) => console.log("Could not find any reviews of that rating"));
   res.send({ status: 200, body: { reviews: reviews } });
 });
 
