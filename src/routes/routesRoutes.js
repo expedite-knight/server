@@ -30,19 +30,19 @@ router.get("/", (req, res) => {
 router.post("/location", validateLocateRoute, async (req, res) => {
   const { routeId } = req.body;
 
-  const route = await getRouteLocation(routeId);
+  const result = await getRouteLocation(routeId);
 
-  if (route) {
-    res.send({
-      status: 200,
-      body: { route: route },
-    });
-  } else {
+  if (result == RES_TYPES.NOT_FOUND) {
     res.send({
       status: 404,
       body: {
         error: RES_TYPES.NOT_FOUND,
       },
+    });
+  } else {
+    res.send({
+      status: 200,
+      body: { route: result },
     });
   }
 });
@@ -55,8 +55,6 @@ router.use((req, res, next) => {
   else next();
 });
 
-//refactor to account for subscriber objects
-//create and add validator middleware + validator check(use route update route as ref)
 router.post("/create", validateRouteCreation, async (req, res) => {
   const error = validationResult(req).formatWith(({ msg }) => msg);
   const hasError = !error.isEmpty();

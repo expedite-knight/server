@@ -56,6 +56,10 @@ const RouteSchema = new mongoose.Schema({
       long: mongoose.SchemaTypes.String,
     },
   },
+  delivered: {
+    type: mongoose.SchemaTypes.Boolean,
+    default: false,
+  },
   updatedAt: {
     type: mongoose.SchemaTypes.Number,
     default: new Date().getTime(),

@@ -20,16 +20,16 @@ const getRouteDetails = async (routeId) => {
   return route;
 };
 
+//we are changing to return the route no matter what even if it is inactive
+//change it on the frotnend to show if the route is active or not
 const getRouteLocation = async (routeId) => {
   const route = await Route.findById(routeId)
     .populate("activeLocation")
     .catch((err) => console.log(`Could not find route with id: ${routeId}`));
 
-  if (route?.active) {
-    return route;
-  } else {
-    return null;
-  }
+  if (!route) return RES_TYPES.NOT_FOUND;
+
+  return route;
 };
 
 const createRoute = async (
