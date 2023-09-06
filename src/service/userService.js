@@ -75,8 +75,6 @@ const updateLocation = async (req, res) => {
         if (!route.quickRoute) return route;
       });
 
-      console.log("returning: ", updatedRoutes);
-
       return updatedRoutes;
 
       //if client is 10 mins out(happens in delivery mode or not)
