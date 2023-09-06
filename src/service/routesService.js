@@ -225,6 +225,8 @@ const deactivateRoute = async (routeId, currentLocation, offset) => {
     async (subscriber) => await sendDeactivationMessage(subscriber, route, eta)
   );
 
+  //this might need to be changed
+  //to accommodate more stuff
   route.active = false;
   route.warningSent = false;
   route.halfwaySent = false;
@@ -236,8 +238,9 @@ const deactivateRoute = async (routeId, currentLocation, offset) => {
     long: "0",
   };
 
-  if (route.quickRoute) await route.deleteOne();
-  else await route.save();
+  if (route.quickRoute) route.disabled = true;
+
+  await route.save();
 
   return RES_TYPES.SUCCESS;
 };

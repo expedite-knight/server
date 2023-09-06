@@ -52,42 +52,36 @@ const updateLocation = async (req, res) => {
           await sendArrivalMessage(subscriber, activeRoute, eta)
       );
 
-      //if the route was quick it will NOT be deleted anymore
-      //the route will be disabled and wont get querried
-      if (activeRoute.quickRoute) {
-        // await Route.deleteOne(activeRoute._id).catch((err) =>
-        //   console.log("ERROR DELETING: ", err)
-        // );
-        activeRoute.disabled = true;
-      } else {
-        activeRoute.activeLocation = {
-          lat: "0",
-          long: "0",
-        };
+      activeRoute.activeLocation = {
+        lat: "0",
+        long: "0",
+      };
 
-        //logic done for saying the package was delivered
-        //now all we gotta do is save the starting location
-        //when the route was started and update the last time
-        //the route was activated at, we should also have a
-        //created at field
-        activeRoute.active = false;
-        activeRoute.warningSent = false;
-        activeRoute.halfwaySent = false;
-        activeRoute.hourAwaySent = false;
-        activeRoute.startingDistance = 0;
-        activeRoute.startingDuration = 0;
-        activeRoute.arrivalTime = new Date().getTime();
-        activeRoute.startingLocation.lat = 0;
-        activeRoute.startingLocation.long = 0;
-        if (activeRoute.deliveryMode) activeRoute.delivered = true;
+      //logic done for saying the package was delivered
+      //now all we gotta do is save the starting location
+      //when the route was started and update the last time
+      //the route was activated at, we should also have a
+      //created at field
+      activeRoute.active = false;
+      activeRoute.warningSent = false;
+      activeRoute.halfwaySent = false;
+      activeRoute.hourAwaySent = false;
+      activeRoute.startingDistance = 0;
+      activeRoute.startingDuration = 0;
+      activeRoute.arrivalTime = new Date().getTime();
+      activeRoute.startingLocation.lat = 0;
+      activeRoute.startingLocation.long = 0;
+      if (activeRoute.deliveryMode) activeRoute.delivered = true;
+      if (activeRoute.quickRoute) activeRoute.disabled = true;
 
-        await activeRoute.save();
-      }
+      await activeRoute.save();
 
-      const updatedRoutes = client.routes.map((route) => {
-        route.active = false;
-        return route;
-      });
+      const updatedRoutes = client.routes
+        .filter((route) => !route.disabled)
+        .map((route) => {
+          route.active = false;
+          return route;
+        });
       return updatedRoutes;
 
       //if client is 10 mins out(happens in delivery mode or not)
