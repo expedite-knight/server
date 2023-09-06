@@ -44,7 +44,7 @@ router.get("/routes", async (req, res) => {
   console.log("routes: ", nonDisabledRoutes);
 
   if (currentUser) {
-    res.send({ status: 200, routes: nonDisabledRoutes });
+    res.send({ status: 200, routes: currentUser.routes });
   } else {
     res.send({ status: 404, body: { error: RES_TYPES.NOT_FOUND } });
   }
