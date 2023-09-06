@@ -71,7 +71,11 @@ const updateLocation = async (req, res) => {
 
       await activeRoute.save();
 
-      const updatedRoutes = client.routes.filter((route) => !route.quickRoute);
+      const updatedRoutes = client.routes.filter((route) => {
+        if (!route.quickRoute) return route;
+      });
+
+      console.log("returning: ", updatedRoutes);
 
       return updatedRoutes;
 
