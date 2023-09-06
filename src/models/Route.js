@@ -68,6 +68,7 @@ const RouteSchema = new mongoose.Schema({
   },
   disabled: {
     type: mongoose.SchemaTypes.Boolean,
+    default: false,
   },
   lastActivatedAt: {
     type: mongoose.SchemaTypes.Number,
