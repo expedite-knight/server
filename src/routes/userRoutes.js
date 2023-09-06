@@ -34,13 +34,14 @@ router.get("/routes", async (req, res) => {
   const currentUser = await User.findById(req.user.user_id)
     .populate("routes")
     .catch((err) => console.log("User not found"));
-  const nonDisabledRoutes = await Route.find({
-    creator: currentUser._id,
-    disabled: false,
-  }).catch(() => console.log("Could not find any user routes"));
+  //this is not working for some reason, look into it tomorrow
+  // const nonDisabledRoutes = await Route.find({
+  //   creator: currentUser._id,
+  //   disabled: false,
+  // }).catch(() => console.log("Could not find any user routes"));
 
   if (currentUser) {
-    res.send({ status: 200, routes: nonDisabledRoutes });
+    res.send({ status: 200, routes: currentUser.routes });
   } else {
     res.send({ status: 404, body: { error: RES_TYPES.NOT_FOUND } });
   }
