@@ -35,7 +35,7 @@ router.get("/routes", async (req, res) => {
     console.log("Could not find user")
   );
   const nonDisabledRoutes = await Route.find({
-    creator: currentUser,
+    creator: currentUser._id,
   }).catch(() => console.log("Could not find any user routes"));
 
   console.log("routes: ", nonDisabledRoutes);
