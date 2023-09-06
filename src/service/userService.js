@@ -70,16 +70,8 @@ const updateLocation = async (req, res) => {
       if (activeRoute.quickRoute) activeRoute.disabled = true;
 
       await activeRoute.save();
-      await client.save();
 
-      const updatedRoutes = client.routes
-        .filter((route) => !route.disabled)
-        .map((route) => {
-          route.active = false;
-          return route;
-        });
-
-      console.log("returning: ", updatedRoutes);
+      const updatedRoutes = client.routes.filter((route) => !route.quickRoute);
 
       return updatedRoutes;
 
