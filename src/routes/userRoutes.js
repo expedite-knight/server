@@ -31,6 +31,9 @@ router.post("/location/update", async (req, res) => {
 });
 
 router.get("/routes", async (req, res) => {
+  const currentUser = await User.findById(req.user.user_id).catch((err) =>
+    console.log("User not found")
+  );
   //this is not working for some reason, look into it tomorrow
   const nonDisabledRoutes = await Route.find({
     creator: req.user.user_id,
