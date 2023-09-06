@@ -31,16 +31,19 @@ router.post("/location/update", async (req, res) => {
 });
 
 router.get("/routes", async (req, res) => {
-  const currentUser = await User.findById(req.user.user_id).catch(() =>
-    console.log("Could not find user")
-  );
-  const nonDisabledRoutes = await Route.find({
-    creator: currentUser._id,
-  }).catch(() => console.log("Could not find any user routes"));
+  const currentUser = await User.findById(req.user.user_id)
+    .populate("routes")
+    .catch(() => console.log("Could not find user"));
 
-  console.log("routes: ", nonDisabledRoutes);
+  if (!currentUser) {
+    res.send({ status: 404, body: { error: RES_TYPES.NOT_FOUND } });
+  } else {
+    const nonDisabledRoutes = currentUser.routes.filter(
+      (route) => !route.disabled
+    );
 
-  res.send({ status: 200, routes: nonDisabledRoutes });
+    res.send({ status: 200, routes: nonDisabledRoutes });
+  }
 });
 
 module.exports = router;
