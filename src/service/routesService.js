@@ -143,8 +143,10 @@ const activateRoute = async (
     //all we need to know on the details page online
     //is what time the driver left, where he is going to
     //and an eta
-    route.startingLocation.lat = currentLocation.lat;
-    route.startingLocation.long = currentLocation.long;
+    route.startingLocation = {
+      lat: currentLocation.lat,
+      long: currentLocation.long,
+    };
     route.startingDistance = eta.mi;
     route.startingDuration = eta.min;
     route.startingETA = new Date().getTime() + eta.min * 60000;
