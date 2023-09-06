@@ -50,6 +50,12 @@ const RouteSchema = new mongoose.Schema({
   startingETA: {
     type: mongoose.SchemaTypes.Number,
   },
+  startingLocation: {
+    type: {
+      lat: mongoose.SchemaTypes.String,
+      long: mongoose.SchemaTypes.String,
+    },
+  },
   activeLocation: {
     type: {
       lat: mongoose.SchemaTypes.String,
@@ -59,6 +65,15 @@ const RouteSchema = new mongoose.Schema({
   delivered: {
     type: mongoose.SchemaTypes.Boolean,
     default: false,
+  },
+  disabled: {
+    type: mongoose.SchemaTypes.Boolean,
+  },
+  lastActivatedAt: {
+    type: mongoose.SchemaTypes.Number,
+  },
+  arrivalTime: {
+    type: mongoose.SchemaTypes.Number,
   },
   updatedAt: {
     type: mongoose.SchemaTypes.Number,

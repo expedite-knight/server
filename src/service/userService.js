@@ -52,23 +52,34 @@ const updateLocation = async (req, res) => {
           await sendArrivalMessage(subscriber, activeRoute, eta)
       );
 
-      //if the route was quick it will be deleted
+      //if the route was quick it will NOT be deleted anymore
+      //the route will be disabled and wont get querried
       if (activeRoute.quickRoute) {
-        await Route.deleteOne(activeRoute._id).catch((err) =>
-          console.log("ERROR DELETING: ", err)
-        );
+        // await Route.deleteOne(activeRoute._id).catch((err) =>
+        //   console.log("ERROR DELETING: ", err)
+        // );
+        activeRoute.disabled = true;
       } else {
         activeRoute.activeLocation = {
           lat: "0",
           long: "0",
         };
 
+        //logic done for saying the package was delivered
+        //now all we gotta do is save the starting location
+        //when the route was started and update the last time
+        //the route was activated at, we should also have a
+        //created at field
         activeRoute.active = false;
         activeRoute.warningSent = false;
         activeRoute.halfwaySent = false;
         activeRoute.hourAwaySent = false;
         activeRoute.startingDistance = 0;
         activeRoute.startingDuration = 0;
+        activeRoute.arrivalTime = new Date().getTime();
+        activeRoute.startingLocation.lat = 0;
+        activeRoute.startingLocation.long = 0;
+        if (activeRoute.deliveryMode) activeRoute.delivered = true;
 
         await activeRoute.save();
       }
@@ -133,6 +144,8 @@ const updateLocation = async (req, res) => {
 
       activeRoute.halfwaySent = true;
       activeRoute.updatedAt = new Date().getTime();
+      activeRoute.startingETA = new Date().getTime() + eta.min * 60000;
+
       await activeRoute.save();
 
       //Delivery Mode: if client is over halfway and eta changes by over an hour
