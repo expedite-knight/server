@@ -57,11 +57,6 @@ const updateLocation = async (req, res) => {
         long: "0",
       };
 
-      //logic done for saying the package was delivered
-      //now all we gotta do is save the starting location
-      //when the route was started and update the last time
-      //the route was activated at, we should also have a
-      //created at field
       activeRoute.active = false;
       activeRoute.warningSent = false;
       activeRoute.halfwaySent = false;
@@ -75,6 +70,7 @@ const updateLocation = async (req, res) => {
       if (activeRoute.quickRoute) activeRoute.disabled = true;
 
       await activeRoute.save();
+      await client.save();
 
       const updatedRoutes = client.routes
         .filter((route) => !route.disabled)
@@ -82,6 +78,9 @@ const updateLocation = async (req, res) => {
           route.active = false;
           return route;
         });
+
+      console.log("returning: ", updatedRoutes);
+
       return updatedRoutes;
 
       //if client is 10 mins out(happens in delivery mode or not)
