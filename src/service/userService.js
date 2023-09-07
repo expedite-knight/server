@@ -131,7 +131,9 @@ const updateLocation = async (req, res) => {
 
       activeRoute.halfwaySent = true;
       activeRoute.updatedAt = new Date().getTime();
-      activeRoute.startingETA = new Date().getTime() + eta.min * 60000;
+      activeRoute.startingETA = Number(
+        new Date().getTime() + (eta.min ? eta.min : 1) * 60000
+      );
 
       await activeRoute.save();
 
