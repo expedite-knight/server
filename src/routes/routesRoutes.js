@@ -273,9 +273,14 @@ router.post("/delete", async (req, res) => {
   );
 
   if (routeDb) {
-    await Route.deleteOne(routeDb);
+    console.log("found route and deleted");
+    routeDb.disabled = true;
+
+    await routeDb.save();
+
     res.send({ status: 204, body: { message: RES_TYPES.DELETED } });
   } else {
+    console.log("route not found to be deleted");
     res.send({ status: 404, body: { message: RES_TYPES.NOT_FOUND } });
   }
 });
