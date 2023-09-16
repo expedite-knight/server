@@ -7,6 +7,8 @@ const {
   sendActivationMessage,
   sendDeactivationMessage,
   sendCancellationMessage,
+  sendPausedMessage,
+  sendUnpausedMessage,
 } = require("./smsService");
 require("dotenv").config();
 
@@ -41,7 +43,8 @@ const createRoute = async (
   deliveryMode,
   currentLocation,
   offset,
-  client
+  client,
+  timezone
 ) => {
   const currentUser = await User.findById(client.user_id).catch((err) =>
     console.log("Could not find user")
@@ -99,7 +102,7 @@ const createRoute = async (
     //work on this, quick routes do not get activated right away
     //we need to send our current locale with this for it to work
     if (route.quickRoute) {
-      await activateRoute(route._id, currentLocation, client, offset);
+      await activateRoute(route._id, currentLocation, client, offset, timezone);
     }
 
     currentUser.routes.push(route);
@@ -114,6 +117,7 @@ const activateRoute = async (
   currentLocation,
   user,
   offset,
+  timezone,
   override
 ) => {
   const client = await User.findById(user.user_id)
@@ -137,7 +141,9 @@ const activateRoute = async (
       .concat("%2C")
       .concat(JSON.stringify(currentLocation.long));
 
-    const eta = await calculateETA(route, formattedLocation, offset);
+    const rawETA = await calculateETA(route, formattedLocation, offset);
+
+    const eta = { ...rawETA, timezone: timezone };
 
     //storing the starting location may not be required
     //all we need to know on the details page online
@@ -157,7 +163,12 @@ const activateRoute = async (
     route.halfwaySent = false;
     route.hourAwaySent = false;
 
-    await route.save();
+    try {
+      await route.save();
+    } catch (err) {
+      console.log("could not save route");
+      return RES_TYPES.ERROR;
+    }
 
     route.subscribers.forEach(
       async (subscriber) => await sendActivationMessage(subscriber, route, eta)
@@ -173,7 +184,8 @@ const activateRouteOverride = async (
   routeId,
   currentLocation,
   user,
-  offset
+  offset,
+  timezone
 ) => {
   const client = await User.findById(user.user_id)
     .populate("routes")
@@ -198,6 +210,7 @@ const activateRouteOverride = async (
     currentLocation,
     user,
     offset,
+    timezone,
     true
   );
 
@@ -208,7 +221,7 @@ const activateRouteOverride = async (
   }
 };
 
-const deactivateRoute = async (routeId, currentLocation, offset) => {
+const deactivateRoute = async (routeId, currentLocation, offset, timezone) => {
   const route = await Route.findById(routeId)
     .populate("creator")
     .catch((res) => console.log("Could not find route"));
@@ -219,7 +232,9 @@ const deactivateRoute = async (routeId, currentLocation, offset) => {
     .concat("%2C")
     .concat(JSON.stringify(currentLocation.long));
 
-  const eta = await calculateETA(route, formattedLocation, offset);
+  const rawETA = await calculateETA(route, formattedLocation, offset);
+
+  const eta = { ...rawETA, timezone: timezone };
 
   route.subscribers.forEach(
     async (subscriber) => await sendDeactivationMessage(subscriber, route, eta)
@@ -233,6 +248,7 @@ const deactivateRoute = async (routeId, currentLocation, offset) => {
   route.hourAwaySent = false;
   route.startingDistance = 0;
   route.startingDuration = 0;
+  route.paused = false;
   route.activeLocation = {
     lat: "0",
     long: "0",
@@ -261,6 +277,7 @@ const deactivateCurrentActiveRoute = async (userId) => {
   activateRoute.warningSent = false;
   activateRoute.halfwaySent = false;
   activateRoute.hourAwaySent = false;
+  activateRoute.paused = false;
   activateRoute.startingDistance = 0;
   activateRoute.startingDuration = 0;
   activateRoute.activeLocation = {
@@ -275,6 +292,84 @@ const deactivateCurrentActiveRoute = async (userId) => {
     const subscriberDb = await VerifiedNumber.findById(subscriber);
     sendCancellationMessage(subscriberDb, activeRoute);
   });
+
+  return RES_TYPES.SUCCESS;
+};
+
+const pauseRoute = async (
+  routeId,
+  currentLocation,
+  client,
+  offset,
+  timezone
+) => {
+  const route = await Route.findById(routeId)
+    .populate("creator")
+    .catch((res) => console.log("Could not find route"));
+
+  if (!route) RES_TYPES.NOT_FOUND;
+
+  const formattedLocation = JSON.stringify(currentLocation.lat)
+    .concat("%2C")
+    .concat(JSON.stringify(currentLocation.long));
+
+  const rawETA = await calculateETA(route, formattedLocation, offset);
+
+  const eta = { ...rawETA, timezone: timezone };
+
+  route.startingLocation = {
+    lat: currentLocation.lat,
+    long: currentLocation.long,
+  };
+
+  route.paused = true;
+
+  await route.save();
+
+  route.subscribers.forEach(
+    async (subscriber) => await sendPausedMessage(subscriber, route, eta)
+  );
+
+  return RES_TYPES.SUCCESS;
+};
+
+const unpauseRoute = async (
+  routeId,
+  currentLocation,
+  client,
+  offset,
+  timezone
+) => {
+  const route = await Route.findById(routeId)
+    .populate("creator")
+    .catch((res) => console.log("Could not find route"));
+
+  if (!route) RES_TYPES.NOT_FOUND;
+
+  const formattedLocation = JSON.stringify(currentLocation.lat)
+    .concat("%2C")
+    .concat(JSON.stringify(currentLocation.long));
+
+  const rawETA = await calculateETA(route, formattedLocation, offset);
+
+  const eta = { ...rawETA, timezone: timezone };
+
+  route.startingLocation = {
+    lat: currentLocation.lat,
+    long: currentLocation.long,
+  };
+  // route.startingDistance = eta.mi;
+  // route.startingDuration = eta.min;
+  route.startingETA = new Date().getTime() + eta.min * 60000;
+  // route.lastActivatedAt = new Date().getTime();
+  route.updatedAt = new Date().getTime();
+  route.paused = false;
+
+  await route.save();
+
+  route.subscribers.forEach(
+    async (subscriber) => await sendUnpausedMessage(subscriber, route, eta)
+  );
 
   return RES_TYPES.SUCCESS;
 };
@@ -296,6 +391,8 @@ module.exports = {
   activateRouteOverride,
   deactivateRoute,
   deactivateCurrentActiveRoute,
+  pauseRoute,
+  unpauseRoute,
   createRoute,
   getRouteDetails,
   getRouteLocation,

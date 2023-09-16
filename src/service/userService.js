@@ -21,6 +21,7 @@ const updateLocation = async (req, res) => {
 
   if (!client) return RES_TYPES.UNAUTHORIZED;
 
+  //look for client routes that are active
   const clientRoutes = client.routes.filter((route) => route.active);
 
   if (clientRoutes.length >= 1) {
@@ -39,13 +40,18 @@ const updateLocation = async (req, res) => {
       .concat("%2C")
       .concat(JSON.stringify(req.body.long));
 
-    const eta = await calculateETA(
+    const rawETA = await calculateETA(
       activeRoute,
       formattedLocation,
       req.body.offset
     );
 
-    //if client has arrived(happens in delivery mode or not)
+    const eta = { ...rawETA, timezone: req.body.timezone };
+
+    console.log("route halfway calculated: ", activeRoute.startingDistance / 2);
+    console.log("route distance now: ", eta.mi);
+
+    //if client has arrived(happens in delivery mode or not or paused)
     if (eta.min === 0 || eta.mi === 0) {
       activeRoute.subscribers.forEach(
         async (subscriber) =>
@@ -61,6 +67,7 @@ const updateLocation = async (req, res) => {
       activeRoute.warningSent = false;
       activeRoute.halfwaySent = false;
       activeRoute.hourAwaySent = false;
+      activeRoute.paused = false;
       activeRoute.startingDistance = 0;
       activeRoute.startingDuration = 0;
       activeRoute.arrivalTime = new Date().getTime();
@@ -77,6 +84,9 @@ const updateLocation = async (req, res) => {
 
       return updatedRoutes;
 
+      //if the route is paused skip everything else
+    } else if (activeRoute.paused) {
+      console.log("User has an active route but it is currently paused");
       //if client is 10 mins out(happens in delivery mode or not)
     } else if (eta.min <= 10 && !activeRoute.warningSent) {
       activeRoute.subscribers.forEach(
@@ -156,7 +166,7 @@ const updateLocation = async (req, res) => {
       return RES_TYPES.SUCCESS;
     }
   } else {
-    console.log("Client has no active routes");
+    console.log("Client has no active or unpaused routes");
     return RES_TYPES.SUCCESS;
   }
 

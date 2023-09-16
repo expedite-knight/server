@@ -65,7 +65,23 @@ const handleReceiveMessage = async (message, from) => {
 const sendActivationMessage = async (subscriber, route, eta) => {
   const etaDurationString = formatCurrentDuration(eta.min);
 
-  const message = `ACTIVATED: ${route.creator.firstName} ${route.creator.lastName} has started a route to ${route.destination} with id: ${route._id}. ${route.creator.firstName} is currently ${eta.mi} mi. or ${etaDurationString} away with an ETA of ${eta.time}. You can track the route online by clicking this link https://www.expediteknight.com/finder?route=${route._id}. If you no longer want to be apart of this route, respond with the route id.`;
+  const message = `ACTIVATED: ${route.creator.firstName} ${route.creator.lastName} has started a route to ${route.destination} with id: ${route._id}. ${route.creator.firstName} is currently ${eta.mi} mi. or ${etaDurationString} away with an ETA of ${eta.time} ${eta.timezone}. You can track the route online by clicking this link https://www.expediteknight.com/finder?route=${route._id}. If you no longer want to be apart of this route, respond with the route id.`;
+
+  await handleSendMessage(subscriber, message);
+};
+
+const sendPausedMessage = async (subscriber, route, eta) => {
+  const etaDurationString = formatCurrentDuration(eta.min);
+
+  const message = `PAUSED: ${route.creator.firstName} ${route.creator.lastName} has paused the route to ${route.destination} ${eta.mi} mi. or ${etaDurationString} away. You will no longer receive any messages and will not be able to view the routes progress online until the route is unpaused or deactivated.`;
+
+  await handleSendMessage(subscriber, message);
+};
+
+const sendUnpausedMessage = async (subscriber, route, eta) => {
+  const etaDurationString = formatCurrentDuration(eta.min);
+
+  const message = `UNPAUSED: ${route.creator.firstName} ${route.creator.lastName} has unpaused the route to ${route.destination} ${eta.mi} mi. or ${etaDurationString} away. You will now start to receive messages again regarding this route.`;
 
   await handleSendMessage(subscriber, message);
 };
@@ -79,13 +95,13 @@ const sendUnSubMessage = async (subscriber, route, eta) => {
 const sendUpdateMessage = async (subscriber, route, eta) => {
   const etaDurationString = formatCurrentDuration(eta.min);
 
-  const message = `UPDATE: ${route.creator.firstName} ${route.creator.lastName} is approximately ${eta.mi} mi. or ${etaDurationString} away with an ETA of ${eta.time}`;
+  const message = `UPDATE: ${route.creator.firstName} ${route.creator.lastName} is approximately ${eta.mi} mi. or ${etaDurationString} away with an ETA of ${eta.time} ${eta.timezone}`;
 
   await handleSendMessage(subscriber, message);
 };
 
 const sendWarningMessage = async (subscriber, route, eta) => {
-  const message = `HEADS UP: ${route.creator.firstName} ${route.creator.lastName} is approximately 10 mins away and will arrive at ${eta.time}`;
+  const message = `HEADS UP: ${route.creator.firstName} ${route.creator.lastName} is approximately 10 mins away and will arrive at ${eta.time} ${eta.timezone}`;
 
   await handleSendMessage(subscriber, message);
 };
@@ -119,19 +135,19 @@ const sendQuoteMessage = async (quote) => {
 };
 
 const sendHalfwayMessage = async (subscriber, route, eta) => {
-  const message = `HALFWAY: ${route.creator.firstName} ${route.creator.lastName} is approximately halfway to ${route.destination} and will arrive at ${eta.time}`;
+  const message = `HALFWAY: ${route.creator.firstName} ${route.creator.lastName} is approximately halfway to ${route.destination} and will arrive at ${eta.time} ${eta.timezone}`;
 
   await handleSendMessage(subscriber, message);
 };
 
 const sendHourAwayMessage = async (subscriber, route, eta) => {
-  const message = `HOUR AWAY: ${route.creator.firstName} ${route.creator.lastName} is approximately 1 hour away and will arrive at ${eta.time}`;
+  const message = `HOUR AWAY: ${route.creator.firstName} ${route.creator.lastName} is approximately 1 hour away and will arrive at ${eta.time} ${eta.timezone}`;
 
   await handleSendMessage(subscriber, message);
 };
 
 const sendHourLateMessage = async (subscriber, route, eta) => {
-  const message = `LATE: ${route.creator.firstName} ${route.creator.lastName} is running at least an hour late with a new ETA of ${eta.time}. We apologize for the delay but thank you for your patience.`;
+  const message = `LATE: ${route.creator.firstName} ${route.creator.lastName} is running at least an hour late with a new ETA of ${eta.time} ${eta.timezone}. We apologize for the delay but thank you for your patience.`;
 
   await handleSendMessage(subscriber, message);
 };
@@ -199,6 +215,8 @@ module.exports = {
   handleReceiveMessage,
   handleSendMessage,
   sendActivationMessage,
+  sendPausedMessage,
+  sendUnpausedMessage,
   sendUnSubMessage,
   sendUpdateMessage,
   sendWarningMessage,

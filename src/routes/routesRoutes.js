@@ -10,6 +10,8 @@ const {
   getRouteLocation,
   activateRouteOverride,
   deactivateCurrentActiveRoute,
+  pauseRoute,
+  unpauseRoute,
 } = require("../service/routesService");
 const { verifyJwt } = require("../service/authService");
 const { RES_TYPES } = require("../utils/helper");
@@ -68,6 +70,7 @@ router.post("/create", validateRouteCreation, async (req, res) => {
     deliveryMode,
     currentLocation,
     offset,
+    timezone,
   } = req.body;
 
   if (hasError && !deliveryMode) {
@@ -82,7 +85,8 @@ router.post("/create", validateRouteCreation, async (req, res) => {
       deliveryMode,
       currentLocation,
       offset,
-      req.user
+      req.user,
+      timezone
     );
 
     res.send({ status: 201, body: { message: RES_TYPES.CREATED } });
@@ -90,9 +94,15 @@ router.post("/create", validateRouteCreation, async (req, res) => {
 });
 
 router.post("/activate", async (req, res) => {
-  const { route, currentLocation, offset } = req.body;
+  const { route, currentLocation, offset, timezone } = req.body;
 
-  const result = await activateRoute(route, currentLocation, req.user, offset);
+  const result = await activateRoute(
+    route,
+    currentLocation,
+    req.user,
+    offset,
+    timezone
+  );
 
   res.send({
     status: result === RES_TYPES.SUCCESS ? 200 : 409,
@@ -101,13 +111,14 @@ router.post("/activate", async (req, res) => {
 });
 
 router.post("/activate/override", async (req, res) => {
-  const { route, currentLocation, offset } = req.body;
+  const { route, currentLocation, offset, timezone } = req.body;
 
   const result = await activateRouteOverride(
     route,
     currentLocation,
     req.user,
-    offset
+    offset,
+    timezone
   );
 
   res.send({
@@ -117,9 +128,14 @@ router.post("/activate/override", async (req, res) => {
 });
 
 router.post("/deactivate", async (req, res) => {
-  const { route, currentLocation, offset } = req.body;
+  const { route, currentLocation, offset, timezone } = req.body;
 
-  const result = await deactivateRoute(route, currentLocation, offset);
+  const result = await deactivateRoute(
+    route,
+    currentLocation,
+    offset,
+    timezone
+  );
   const client = await User.findById(req.user.user_id)
     .populate("routes")
     .catch((err) => {
@@ -146,6 +162,40 @@ router.post("/deactivate/current", async (req, res) => {
   } else {
     res.send({ status: 404, body: { message: result } });
   }
+});
+
+router.post("/pause", async (req, res) => {
+  const { route, currentLocation, offset, timezone } = req.body;
+
+  const result = await pauseRoute(
+    route,
+    currentLocation,
+    req.user,
+    offset,
+    timezone
+  );
+
+  res.send({
+    status: result === RES_TYPES.SUCCESS ? 200 : 409,
+    message: result,
+  });
+});
+
+router.post("/unpause", async (req, res) => {
+  const { route, currentLocation, offset, timezone } = req.body;
+
+  const result = await unpauseRoute(
+    route,
+    currentLocation,
+    req.user,
+    offset,
+    timezone
+  );
+
+  res.send({
+    status: result === RES_TYPES.SUCCESS ? 200 : 409,
+    message: result,
+  });
 });
 
 router.post("/details", async (req, res) => {

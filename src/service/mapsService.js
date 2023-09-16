@@ -10,12 +10,12 @@ const calculateETA = async (route, currentLocation, offset) => {
   const { MATRIX_API_KEY } = process.env;
 
   const formattedDestination = route.destination.replaceAll(" ", "%20");
+  console.log("current locale: ", currentLocation);
 
   try {
     const eta = await axios(
       `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${currentLocation}&destinations=${formattedDestination}&key=${MATRIX_API_KEY}`
     ).then(async (res) => {
-      // console.log("dur w/ traffic: ", res.data.rows[0].elements[0].distance.text);
       const fullDistance = res.data.rows[0].elements[0].distance.text;
       const indexOfDistance = fullDistance.indexOf(" ");
       let distanceString = fullDistance.substr(0, indexOfDistance);
@@ -78,7 +78,7 @@ const calculateETA = async (route, currentLocation, offset) => {
     });
     return eta;
   } catch (err) {
-    console.log("Err generating ETA: ", err);
+    console.log("Error generating eta: ", err);
     return RES_TYPES.ERROR;
   }
 };

@@ -26,6 +26,9 @@ const RouteSchema = new mongoose.Schema({
     type: [mongoose.SchemaTypes.ObjectId],
     ref: "VerifiedNumber",
   },
+  tage: {
+    type: [mongoose.SchemaTypes.String],
+  },
   halfwaySent: {
     type: mongoose.SchemaTypes.Boolean,
     default: false,
@@ -63,6 +66,10 @@ const RouteSchema = new mongoose.Schema({
     },
   },
   delivered: {
+    type: mongoose.SchemaTypes.Boolean,
+    default: false,
+  },
+  paused: {
     type: mongoose.SchemaTypes.Boolean,
     default: false,
   },
