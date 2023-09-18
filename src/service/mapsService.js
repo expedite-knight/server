@@ -62,7 +62,8 @@ const calculateETA = async (route, currentLocation, offset) => {
         durationNum = Number(totalInMins);
       }
 
-      if (convertKmToMi(distanceNum) <= 0.05 || durationNum <= 1) {
+      //returning that the user has arrived by sending 0 eta
+      if (convertKmToMi(distanceNum) <= 0.025 || durationNum <= 1) {
         return {
           mi: 0,
           min: 0,

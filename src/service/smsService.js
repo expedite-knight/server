@@ -101,7 +101,7 @@ const sendUpdateMessage = async (subscriber, route, eta) => {
 };
 
 const sendWarningMessage = async (subscriber, route, eta) => {
-  const message = `HEADS UP: ${route.creator.firstName} ${route.creator.lastName} is approximately 10 mins away and will arrive at ${eta.time} ${eta.timezone}`;
+  const message = `HEADS UP: ${route.creator.firstName} ${route.creator.lastName} is approximately 10 mins away and should arrive at ${eta.time} ${eta.timezone}`;
 
   await handleSendMessage(subscriber, message);
 };
@@ -135,13 +135,13 @@ const sendQuoteMessage = async (quote) => {
 };
 
 const sendHalfwayMessage = async (subscriber, route, eta) => {
-  const message = `HALFWAY: ${route.creator.firstName} ${route.creator.lastName} is approximately halfway to ${route.destination} and will arrive at ${eta.time} ${eta.timezone}`;
+  const message = `HALFWAY: ${route.creator.firstName} ${route.creator.lastName} is approximately halfway to ${route.destination} and should arrive at ${eta.time} ${eta.timezone}`;
 
   await handleSendMessage(subscriber, message);
 };
 
 const sendHourAwayMessage = async (subscriber, route, eta) => {
-  const message = `HOUR AWAY: ${route.creator.firstName} ${route.creator.lastName} is approximately 1 hour away and will arrive at ${eta.time} ${eta.timezone}`;
+  const message = `HOUR AWAY: ${route.creator.firstName} ${route.creator.lastName} is approximately 1 hour away and should arrive at ${eta.time} ${eta.timezone}`;
 
   await handleSendMessage(subscriber, message);
 };
