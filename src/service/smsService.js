@@ -73,7 +73,7 @@ const sendActivationMessage = async (subscriber, route, eta) => {
 const sendPausedMessage = async (subscriber, route, eta) => {
   const etaDurationString = formatCurrentDuration(eta.min);
 
-  const message = `PAUSED: ${route.creator.firstName} ${route.creator.lastName} has paused the route to ${route.destination} ${eta.mi} mi. or ${etaDurationString} away. You will no longer receive any messages and will not be able to view the routes progress online until the route is unpaused or deactivated.`;
+  const message = `PAUSED: ${route.creator.firstName} ${route.creator.lastName} has paused the route to ${route.destination} ${eta.mi} mi. or ${etaDurationString} away. You will no longer receive any messages and will not be able to view the routes progress online until the route is resumed or deactivated.`;
 
   await handleSendMessage(subscriber, message);
 };
@@ -81,7 +81,7 @@ const sendPausedMessage = async (subscriber, route, eta) => {
 const sendUnpausedMessage = async (subscriber, route, eta) => {
   const etaDurationString = formatCurrentDuration(eta.min);
 
-  const message = `UNPAUSED: ${route.creator.firstName} ${route.creator.lastName} has unpaused the route to ${route.destination} ${eta.mi} mi. or ${etaDurationString} away. You will now start to receive messages again regarding this route.`;
+  const message = `RESUMED: ${route.creator.firstName} ${route.creator.lastName} has resumed the route to ${route.destination} ${eta.mi} mi. or ${etaDurationString} away. You will now start to receive messages again regarding this route.`;
 
   await handleSendMessage(subscriber, message);
 };
