@@ -49,6 +49,15 @@ router.post("/location", validateLocateRoute, async (req, res) => {
   }
 });
 
+router.post("/details", async (req, res) => {
+  const { route } = req.body;
+
+  const routeDetails = await getRouteDetails(route);
+
+  if (routeDetails) res.send({ status: 200, body: { message: routeDetails } });
+  else res.send({ status: 404, body: { error: RES_TYPES.NOT_FOUND } });
+});
+
 router.use(verifyJwt);
 
 router.use((req, res, next) => {
@@ -196,14 +205,6 @@ router.post("/unpause", async (req, res) => {
     status: result === RES_TYPES.SUCCESS ? 200 : 409,
     message: result,
   });
-});
-
-router.post("/details", async (req, res) => {
-  const { route } = req.body;
-  const routeDetails = await getRouteDetails(route);
-
-  if (routeDetails) res.send({ status: 200, body: { message: routeDetails } });
-  else res.send({ status: 404, body: { error: RES_TYPES.NOT_FOUND } });
 });
 
 //should be put into its own module
