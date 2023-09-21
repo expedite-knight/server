@@ -63,14 +63,6 @@ const updateLocation = async (req, res) => {
     //this should now account for timezone changes when detecting if someone is
     //gonna be late now
 
-    /*
-      activeRoute.startingETA + 60 * 60000 <=
-        new Date().getTime() + eta.min * 60000
-    */
-
-    console.log("starting eta: ", activeRoute.startingETA);
-    console.log("current eta: ", eta);
-
     if (activeRoute.startingOffset > req.body.offset) {
       activeRoute.startingETA =
         activeRoute.startingETA +

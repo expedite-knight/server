@@ -64,6 +64,7 @@ router.post("/logout", async (req, res, next) => {
   });
 });
 
+//when someone registers verify their number automatically too
 router.post("/register", validateRegistration, async (req, res) => {
   const error = validationResult(req).formatWith(({ msg }) => msg);
   const hasError = !error.isEmpty();
@@ -71,8 +72,8 @@ router.post("/register", validateRegistration, async (req, res) => {
   if (hasError) {
     res.send({ status: 422, body: { message: error.array() } });
   } else {
-    const { email, firstName, lastName, password } = req.body;
-    if (!email || !firstName || !lastName || !password)
+    const { email, firstName, lastName, password, number } = req.body;
+    if (!email || !firstName || !lastName || !password || !number)
       res.send({ status: 401, message: "all fields requried" });
 
     const alreadyExists = await User.findOne({ email: email }).catch((err) =>
@@ -87,6 +88,7 @@ router.post("/register", validateRegistration, async (req, res) => {
         firstName,
         lastName,
         password: hashedPassword,
+        phoneNumber: number,
       });
 
       res.send({ status: 200, body: { message: RES_TYPES.CREATED } });
@@ -102,7 +104,7 @@ router.use(verifyJwt);
 router.put("/update", validateUserUpdate, async (req, res) => {
   const error = validationResult(req).formatWith(({ msg }) => msg);
   const hasError = !error.isEmpty();
-  const { firstName, lastName, password } = req.body;
+  const { firstName, lastName, password, number } = req.body;
 
   if (
     (hasError && password.trim() !== "") ||
@@ -116,6 +118,7 @@ router.put("/update", validateUserUpdate, async (req, res) => {
     );
     currentUser.firstName = firstName;
     currentUser.lastName = lastName;
+    number ? (currentUser.phoneNumber = number) : null;
 
     //if password is empty then keep the og password
     if (password.trim() !== "") {
