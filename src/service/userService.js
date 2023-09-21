@@ -48,9 +48,29 @@ const updateLocation = async (req, res) => {
 
     const eta = { ...rawETA, timezone: req.body.timezone };
 
-    //should be late if starting duration is off from current eta by 60
-    console.log("Initial ETA: ", activeRoute.startingDuration);
-    console.log("Current ETA: ", eta);
+    //timezone offsets go from lower number on the right and get to higher
+    //numbers on the left so new york is +4 and nashville is +5
+    //nashville is +5 but 1pm
+    //new york is +4 but 2pm
+
+    //so if the current offset is greater than the starting offset you
+    //subtract (an hour)*(difference between current and starting) from the
+    //starting eta
+
+    //if the current offset is less than the starting then you add
+    //(an hour)*(difference between current and starting) to the starting eta
+
+    //this should now account for timezone changes when detecting if someone is
+    //gonna be late now
+    if (activeRoute.startingOffset > req.body.offset) {
+      activeRoute.startingDuration =
+        activeRoute.startingDuration +
+        60 * (activeRoute.startingOffset - req.body.offset);
+    } else if (activeRoute.startingOffset < req.body.offset) {
+      activeRoute.startingDuration =
+        activeRoute.startingDuration -
+        60 * (activeRoute.startingOffset - req.body.offset);
+    }
 
     //if client has arrived(happens in delivery mode or not or paused)
     if (eta.min === 0 || eta.mi === 0) {
@@ -150,6 +170,7 @@ const updateLocation = async (req, res) => {
       await activeRoute.save();
 
       //Delivery Mode: if client is over halfway and eta changes by over an hour
+      //im not sure this accounts for timezone differences though
     } else if (
       activeRoute.deliveryMode &&
       activeRoute.halfwaySent &&

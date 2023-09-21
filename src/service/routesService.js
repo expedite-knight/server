@@ -155,6 +155,7 @@ const activateRoute = async (
     };
     route.startingDistance = eta.mi;
     route.startingDuration = eta.min;
+    route.startingOffset = offset;
     route.startingETA = new Date().getTime() + eta.min * 60000;
     route.lastActivatedAt = new Date().getTime();
     route.updatedAt = new Date().getTime();

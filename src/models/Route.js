@@ -53,6 +53,9 @@ const RouteSchema = new mongoose.Schema({
   startingETA: {
     type: mongoose.SchemaTypes.Number,
   },
+  startingOffset: {
+    type: mongoose.SchemaTypes.Number,
+  },
   startingLocation: {
     type: {
       lat: mongoose.SchemaTypes.String,
