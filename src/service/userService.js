@@ -48,7 +48,9 @@ const updateLocation = async (req, res) => {
 
     const eta = { ...rawETA, timezone: req.body.timezone };
 
-    console.log("initial ETA: ", eta);
+    //should be late if starting duration is off from current eta by 60
+    console.log("Initial ETA: ", activeRoute.startingDuration);
+    console.log("Current ETA: ", eta);
 
     //if client has arrived(happens in delivery mode or not or paused)
     if (eta.min === 0 || eta.mi === 0) {
