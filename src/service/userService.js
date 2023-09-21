@@ -62,15 +62,24 @@ const updateLocation = async (req, res) => {
 
     //this should now account for timezone changes when detecting if someone is
     //gonna be late now
-    // if (activeRoute.startingOffset > req.body.offset) {
-    //   activeRoute.startingDuration =
-    //     activeRoute.startingDuration +
-    //     60 * (activeRoute.startingOffset - req.body.offset);
-    // } else if (activeRoute.startingOffset < req.body.offset) {
-    //   activeRoute.startingDuration =
-    //     activeRoute.startingDuration -
-    //     60 * (activeRoute.startingOffset - req.body.offset);
-    // }
+
+    /*
+      activeRoute.startingETA + 60 * 60000 <=
+        new Date().getTime() + eta.min * 60000
+    */
+
+    console.log("starting eta: ", activeRoute.startingETA);
+    console.log("current eta: ", eta);
+
+    if (activeRoute.startingOffset > req.body.offset) {
+      activeRoute.startingETA =
+        activeRoute.startingETA +
+        60 * 60000 * (activeRoute.startingOffset - req.body.offset);
+    } else if (activeRoute.startingOffset < req.body.offset) {
+      activeRoute.startingETA =
+        activeRoute.startingETA -
+        60 * 60000 * (activeRoute.startingOffset - req.body.offset);
+    }
 
     //if client has arrived(happens in delivery mode or not or paused)
     if (eta.min === 0 || eta.mi === 0) {
