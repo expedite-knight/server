@@ -94,6 +94,7 @@ const formatArrivalTime = (duration, offset) => {
     "Arrival time w/o offset: ",
     moment(arrivalTimeInMS).format("LT")
   );
+  console.log("Arrival time w/ offset: ", arrivalTime);
   return arrivalTime;
 };
 

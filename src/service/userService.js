@@ -128,11 +128,12 @@ const updateLocation = async (req, res) => {
       activeRoute.updatedAt = new Date().getTime();
       await activeRoute.save();
 
-      //Delivery Mode: if client is halfway there and halfway message has not been sent yet
+      //Delivery Mode: if client is halfway there and halfway message has not been sent yet but ignore if trip is shorter than 30 mins
     } else if (
       activeRoute.deliveryMode &&
       activeRoute.startingDistance / 2 >= eta.mi &&
-      !activeRoute.halfwaySent
+      !activeRoute.halfwaySent &&
+      eta.min >= 30
     ) {
       activeRoute.subscribers.forEach(
         async (subscriber) =>
