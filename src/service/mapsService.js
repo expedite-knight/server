@@ -10,7 +10,6 @@ const calculateETA = async (route, currentLocation, offset) => {
   const { MATRIX_API_KEY } = process.env;
 
   const formattedDestination = route.destination.replaceAll(" ", "%20");
-  console.log("current locale: ", currentLocation);
 
   try {
     const eta = await axios(
@@ -63,7 +62,7 @@ const calculateETA = async (route, currentLocation, offset) => {
       }
 
       //returning that the user has arrived by sending 0 eta
-      if (convertKmToMi(distanceNum) <= 0.025 || durationNum <= 1) {
+      if (convertKmToMi(distanceNum) <= 0.05 || durationNum <= 1) {
         return {
           mi: 0,
           min: 0,
@@ -91,6 +90,10 @@ const convertKmToMi = (distanceKm) => {
 const formatArrivalTime = (duration, offset) => {
   const arrivalTimeInMS = new Date().getTime() + duration * 60000;
   const arrivalTime = moment(arrivalTimeInMS).utcOffset(-offset).format("LT");
+  console.log(
+    "Arrival time w/o offset: ",
+    moment(arrivalTimeInMS).format("LT")
+  );
   return arrivalTime;
 };
 
