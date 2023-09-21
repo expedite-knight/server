@@ -97,7 +97,7 @@ const formatArrivalTime = (duration, offset) => {
   );
   console.log(
     "Arrival time w/ alt offset: ",
-    moment(arrivalTimeInMS).utcOffset(-6).format("LT")
+    moment(arrivalTimeInMS).utcOffset(-4).format("LT")
   );
   return arrivalTime;
 };
