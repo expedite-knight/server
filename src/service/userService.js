@@ -48,8 +48,7 @@ const updateLocation = async (req, res) => {
 
     const eta = { ...rawETA, timezone: req.body.timezone };
 
-    console.log("route halfway calculated: ", activeRoute.startingDistance / 2);
-    console.log("route distance now: ", eta.mi);
+    console.log("initial ETA: ", eta);
 
     //if client has arrived(happens in delivery mode or not or paused)
     if (eta.min === 0 || eta.mi === 0) {

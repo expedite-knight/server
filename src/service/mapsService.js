@@ -90,15 +90,6 @@ const convertKmToMi = (distanceKm) => {
 const formatArrivalTime = (duration, offset) => {
   const arrivalTimeInMS = new Date().getTime() + duration * 60000;
   const arrivalTime = moment(arrivalTimeInMS).utcOffset(-offset).format("LT");
-  console.log("Offset: ", offset);
-  console.log(
-    "Arrival time w/o offset: ",
-    moment(arrivalTimeInMS).format("LT")
-  );
-  console.log(
-    "Arrival time w/ alt offset: ",
-    moment(arrivalTimeInMS).utcOffset(-4).format("LT")
-  );
   return arrivalTime;
 };
 
