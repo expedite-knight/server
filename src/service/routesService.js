@@ -265,9 +265,9 @@ const deactivateRoute = async (routeId, currentLocation, offset, timezone) => {
 //we dont need to wait for this because this function should only be used
 //when logging out
 const deactivateCurrentActiveRoute = async (userId) => {
+  console.log("user id: ", userId);
   const activeRoute = await Route.findOne({
     creator: userId.user_id,
-    active: true,
   })
     .populate("creator")
     .catch((err) => console.log("No active routes"));
