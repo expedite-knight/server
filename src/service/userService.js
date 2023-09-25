@@ -73,6 +73,21 @@ const updateLocation = async (req, res) => {
         60 * 60000 * (activeRoute.startingOffset - req.body.offset);
     }
 
+    //test this, basically if a user is within .6 distance of their
+    //target location for 4 ticks/2 mins then they have arrived
+    //this can be changed later on
+    if (eta.mi <= 0.6 && activeRoute?.arrivalCounter >= 4) {
+      eta.min = 0;
+      eta.mi = 0;
+    } else if (eta.mi <= 0.6) {
+      console.log("adding to counter");
+      //just incase the value is undefined
+      activeRoute.arrivalCounter
+        ? (activeRoute.arrivalCounter += 1)
+        : (activeRoute.arrivalCounter = 1);
+      await activeRoute.save();
+    }
+
     //if client has arrived(happens in delivery mode or not or paused)
     if (eta.min === 0 || eta.mi === 0) {
       activeRoute.subscribers.forEach(

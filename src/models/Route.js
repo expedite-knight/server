@@ -22,11 +22,15 @@ const RouteSchema = new mongoose.Schema({
   interval: {
     type: mongoose.SchemaTypes.Number,
   },
+  arrivalCounter: {
+    type: mongoose.SchemaTypes.Number,
+    default: 0,
+  },
   subscribers: {
     type: [mongoose.SchemaTypes.ObjectId],
     ref: "VerifiedNumber",
   },
-  tage: {
+  tags: {
     type: [mongoose.SchemaTypes.String],
   },
   halfwaySent: {

@@ -163,6 +163,7 @@ const activateRoute = async (
     route.warningSent = false;
     route.halfwaySent = false;
     route.hourAwaySent = false;
+    route.arrivalCounter = 0;
 
     try {
       await route.save();
@@ -244,6 +245,7 @@ const deactivateRoute = async (routeId, currentLocation, offset, timezone) => {
   //this might need to be changed
   //to accommodate more stuff
   route.active = false;
+  route.arrivalCounter = 0;
   route.warningSent = false;
   route.halfwaySent = false;
   route.hourAwaySent = false;
@@ -278,6 +280,7 @@ const deactivateCurrentActiveRoute = async (userId) => {
   if (!activeRoute) return RES_TYPES.NOT_FOUND;
 
   activeRoute.active = false;
+  activeRoute.arrivalCounter = 0;
   activeRoute.warningSent = false;
   activeRoute.halfwaySent = false;
   activeRoute.hourAwaySent = false;
