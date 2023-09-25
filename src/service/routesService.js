@@ -272,6 +272,8 @@ const deactivateCurrentActiveRoute = async (userId) => {
     .populate("creator")
     .catch((err) => console.log("No active routes"));
 
+  console.log("active route found: ", activeRoute);
+
   if (!activeRoute) return RES_TYPES.NOT_FOUND;
 
   activeRoute.active = false;
@@ -287,6 +289,8 @@ const deactivateCurrentActiveRoute = async (userId) => {
   };
 
   if (activeRoute.quickRoute) activeRoute.disabled = true;
+
+  console.log("saving new active route: ", activateRoute);
 
   await activeRoute.save();
 
