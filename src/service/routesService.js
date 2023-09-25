@@ -290,7 +290,7 @@ const deactivateCurrentActiveRoute = async (userId) => {
 
   if (activeRoute.quickRoute) activeRoute.disabled = true;
 
-  console.log("saving new active route: ", activateRoute);
+  console.log("saving new active route: ", activeRoute);
 
   await activeRoute.save();
 
