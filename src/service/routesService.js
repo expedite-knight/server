@@ -272,22 +272,21 @@ const deactivateCurrentActiveRoute = async (userId) => {
     .populate("creator")
     .catch((err) => console.log("No active routes"));
 
-  console.log("active route: ", activateRoute);
   if (!activeRoute) return RES_TYPES.NOT_FOUND;
 
-  activateRoute.active = false;
-  activateRoute.warningSent = false;
-  activateRoute.halfwaySent = false;
-  activateRoute.hourAwaySent = false;
-  activateRoute.paused = false;
-  activateRoute.startingDistance = 0;
-  activateRoute.startingDuration = 0;
-  activateRoute.activeLocation = {
+  activeRoute.active = false;
+  activeRoute.warningSent = false;
+  activeRoute.halfwaySent = false;
+  activeRoute.hourAwaySent = false;
+  activeRoute.paused = false;
+  activeRoute.startingDistance = 0;
+  activeRoute.startingDuration = 0;
+  activeRoute.activeLocation = {
     lat: "0",
     long: "0",
   };
 
-  if (activateRoute.quickRoute) activateRoute.disabled = true;
+  if (activeRoute.quickRoute) activeRoute.disabled = true;
 
   await activeRoute.save();
 

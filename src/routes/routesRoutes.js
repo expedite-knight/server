@@ -166,8 +166,6 @@ router.post("/deactivate/current", async (req, res) => {
       console.log("Could not find user.");
     });
 
-  console.log("Deactivating all routes: ", result);
-
   if (result === RES_TYPES.SUCCESS) {
     res.send({ status: 200, body: { message: result, routes: client.routes } });
   } else {
