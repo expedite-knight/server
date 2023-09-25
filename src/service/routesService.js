@@ -265,14 +265,15 @@ const deactivateRoute = async (routeId, currentLocation, offset, timezone) => {
 //we dont need to wait for this because this function should only be used
 //when logging out
 const deactivateCurrentActiveRoute = async (userId) => {
-  console.log("user id: ", userId);
-  const activeRoute = await Route.findOne({
-    creator: userId.user_id,
-  })
-    .populate("creator")
-    .catch((err) => console.log("No active routes"));
+  const currentUser = await User.findById(userId.user_id)
+    .populate("routes")
+    .catch(() => console.log("no user found"));
 
-  console.log("active route found: ", activeRoute);
+  if (!currentUser) return RES_TYPES.NOT_FOUND;
+
+  const rawActiveRoute = currentUser.routes.filter((route) => route.active);
+
+  const activeRoute = await Route.findById(rawActiveRoute[0]?._id);
 
   if (!activeRoute) return RES_TYPES.NOT_FOUND;
 
@@ -290,9 +291,8 @@ const deactivateCurrentActiveRoute = async (userId) => {
 
   if (activeRoute.quickRoute) activeRoute.disabled = true;
 
-  console.log("saving new active route: ", activeRoute);
-
   await activeRoute.save();
+  await currentUser.save();
 
   //do not need to wait here so do not need to wrap in Promise.all syntax
   activeRoute.subscribers.forEach(async (subscriber) => {
