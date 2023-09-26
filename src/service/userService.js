@@ -76,7 +76,7 @@ const updateLocation = async (req, res) => {
     //test this, basically if a user is within .6 distance of their
     //target location for 4 ticks/2 mins then they have arrived
     //this can be changed later on
-    if (eta.mi <= 0.6 && activeRoute?.arrivalCounter >= 4) {
+    if (eta.mi <= 0.5 && activeRoute?.arrivalCounter >= 4) {
       eta.min = 0;
       eta.mi = 0;
     } else if (eta.mi <= 0.6) {
