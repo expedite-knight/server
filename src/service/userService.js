@@ -73,8 +73,8 @@ const updateLocation = async (req, res) => {
         60 * 60000 * (activeRoute.startingOffset - req.body.offset);
     }
 
-    //test this, basically if a user is within .6 distance of their
-    //target location for 4 ticks/2 mins then they have arrived
+    //test this, basically if a user is within 1 distance of their
+    //target location for 6 ticks/3 mins then they have arrived
     //this can be changed later on
     if (eta.mi <= 1 && activeRoute?.arrivalCounter >= 6) {
       eta.min = 0;
@@ -124,8 +124,13 @@ const updateLocation = async (req, res) => {
       //if the route is paused skip everything else
     } else if (activeRoute.paused) {
       console.log("User has an active route but it is currently paused");
-      //if client is 10 mins out(happens in delivery mode or not)
-    } else if (eta.min <= 10 && !activeRoute.warningSent) {
+
+      //if client is 10 mins out(happens in delivery mode or not) but not if route is shorter than 10 mins
+    } else if (
+      eta.min <= 10 &&
+      !activeRoute.warningSent &&
+      activeRoute.startingDuration > 10
+    ) {
       activeRoute.subscribers.forEach(
         async (subscriber) =>
           await sendWarningMessage(subscriber, activeRoute, eta)
@@ -149,12 +154,12 @@ const updateLocation = async (req, res) => {
       activeRoute.updatedAt = new Date().getTime();
       await activeRoute.save();
 
-      //Delivery Mode: hour away message, ignore if the route is under an hour though
+      //Delivery Mode: hour away message, ignore if the route is under 3 hours though
     } else if (
       activeRoute.deliveryMode &&
       eta.min <= 60 &&
       !activeRoute.hourAwaySent &&
-      activeRoute.startingDuration > 60
+      activeRoute.startingDuration >= 180
     ) {
       activeRoute.subscribers.forEach(
         async (subscriber) =>
