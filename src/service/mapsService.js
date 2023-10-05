@@ -67,7 +67,7 @@ const calculateETA = async (route, currentLocation, offset) => {
       //an arrival sequence
       console.log("distance: ", convertKmToMi(distanceNum));
       console.log("duration: ", durationNum);
-      if (convertKmToMi(distanceNum) <= 0.25 || durationNum < 1) {
+      if (convertKmToMi(distanceNum) <= 0.1 || durationNum < 1) {
         return {
           mi: 0,
           min: 0,
