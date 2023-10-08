@@ -17,10 +17,22 @@ const calculateETA = async (route, currentLocation, offset) => {
     ).then(async (res) => {
       console.log("MATRIX RES: ", res.data.rows[0].elements[0]);
       const fullDistance = res.data.rows[0].elements[0].distance.text;
-      const indexOfDistance = fullDistance.indexOf(" ");
-      let distanceString = fullDistance.substr(0, indexOfDistance);
-      distanceString = distanceString.replaceAll(",", "");
-      const distanceNum = Number(distanceString);
+
+      const convertedDistance = () => {
+        //if the unit is in km then return the proper conversion
+        if (fullDistance.indexOf("km") != -1) {
+          const indexOfDistance = fullDistance.indexOf(" ");
+          let distanceString = fullDistance.substr(0, indexOfDistance);
+          distanceString = distanceString.replaceAll(",", "");
+          const distanceNum = Number(distanceString);
+
+          return convertKmToMi(distanceNum);
+        } else {
+          //if the unit is in m then the user is basically there so trigger
+          //the activation procedure
+          return 0;
+        }
+      };
 
       const fullDuration =
         res.data.rows[0].elements[0].duration_in_traffic.text;
@@ -65,9 +77,9 @@ const calculateETA = async (route, currentLocation, offset) => {
 
       //returning that the user has arrived by sending 0 eta which triggers
       //an arrival sequence
-      console.log("distance: ", convertKmToMi(distanceNum));
+      console.log("distance: ", convertedDistance());
       console.log("duration: ", durationNum);
-      if (convertKmToMi(distanceNum) <= 0.1 || durationNum < 1) {
+      if (convertedDistance() <= 0.1 || durationNum < 1) {
         return {
           mi: 0,
           min: 0,
@@ -75,7 +87,7 @@ const calculateETA = async (route, currentLocation, offset) => {
         };
       } else {
         return {
-          mi: convertKmToMi(distanceNum),
+          mi: convertedDistance(),
           min: durationNum,
           time: formatArrivalTime(durationNum, offset),
         };
