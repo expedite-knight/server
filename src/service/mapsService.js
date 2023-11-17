@@ -15,7 +15,7 @@ const calculateETA = async (route, currentLocation, offset) => {
     const eta = await axios(
       `https://maps.googleapis.com/maps/api/distancematrix/json?departure_time=now&traffic_model=best_guess&origins=${currentLocation}&destinations=${formattedDestination}&key=${MATRIX_API_KEY}`
     ).then(async (res) => {
-      console.log("MATRIX RES: ", res.data.rows[0].elements[0]);
+      console.log("MATRIX RES: ", res.data);
       const fullDistance = res.data.rows[0].elements[0].distance.text;
 
       const convertedDistance = () => {
