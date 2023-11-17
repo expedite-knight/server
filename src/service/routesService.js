@@ -143,6 +143,8 @@ const activateRoute = async (
 
     const rawETA = await calculateETA(route, formattedLocation, offset);
 
+    if (rawETA === RES_TYPES.ERROR) return RES_TYPES.ERROR;
+
     const eta = { ...rawETA, timezone: timezone };
 
     //storing the starting location may not be required
@@ -236,6 +238,8 @@ const deactivateRoute = async (routeId, currentLocation, offset, timezone) => {
 
   const rawETA = await calculateETA(route, formattedLocation, offset);
 
+  if (rawETA === RES_TYPES.ERROR) return RES_TYPES.ERROR;
+
   const eta = { ...rawETA, timezone: timezone };
 
   route.subscribers.forEach(
@@ -325,6 +329,8 @@ const pauseRoute = async (
 
   const rawETA = await calculateETA(route, formattedLocation, offset);
 
+  if (rawETA === RES_TYPES.ERROR) return RES_TYPES.ERROR;
+
   const eta = { ...rawETA, timezone: timezone };
 
   route.startingLocation = {
@@ -361,6 +367,8 @@ const unpauseRoute = async (
     .concat(JSON.stringify(currentLocation.long));
 
   const rawETA = await calculateETA(route, formattedLocation, offset);
+
+  if (rawETA === RES_TYPES.ERROR) return RES_TYPES.ERROR;
 
   const eta = { ...rawETA, timezone: timezone };
 

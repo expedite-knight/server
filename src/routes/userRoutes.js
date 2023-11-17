@@ -25,6 +25,8 @@ router.post("/location/update", async (req, res) => {
     res.send({ status: 204, body: { message: result } });
   } else if (result === RES_TYPES.UNAUTHORIZED) {
     res.send({ status: 403, body: { error: result } });
+  } else if (result === RES_TYPES.ERROR) {
+    res.send({ status: 404, body: { error: result } });
   } else {
     res.send({ status: 200, body: { routes: result } });
   }

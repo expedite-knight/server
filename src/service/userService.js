@@ -46,6 +46,8 @@ const updateLocation = async (req, res) => {
       req.body.offset
     );
 
+    if (rawETA === RES_TYPES.ERROR) return RES_TYPES.ERROR;
+
     const eta = { ...rawETA, timezone: req.body.timezone };
 
     //timezone offsets go from lower number on the right and get to higher
